@@ -12,8 +12,6 @@ export default function DetailScreen() {
   const [sizeSelected, setSizeSelected] = useState('s');
   const [expanded, setExpanded] = useState(false);
 
-  
-  
   const toggleExpanded = () => setExpanded(!expanded);
 
   const longDescription =
@@ -50,11 +48,9 @@ export default function DetailScreen() {
     },
   ];
 
-
-  function buyButtonHandler(){
-    return navigation.navigate('OrderScreen')
+  function buyButtonHandler() {
+    return navigation.navigate('OrderScreen');
   }
-
 
   return (
     <View style={styles.container}>
@@ -100,15 +96,7 @@ export default function DetailScreen() {
         </View>
       </View>
       <View style={styles.descriptionContainer}>
-        <View
-          style={{
-            height: 2,
-            backgroundColor: '#ccc',
-            marginVertical: 10,
-            width: '90%',
-            alignSelf: 'center',
-          }}
-        />
+        <View style={styles.line} />
         <Text style={styles.descriptionTitle}>Description</Text>
 
         <Text
@@ -267,7 +255,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Sora-Regular',
   },
   sizeButtonSelected: {
-    backgroundColor: 'rgba(198, 124, 78, 0.3)',
+    backgroundColor: 'rgba(198, 124, 78, 0.001)',
     borderColor: Colors.primary,
   },
 
@@ -314,5 +302,12 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  line: {
+    height: 2,
+    backgroundColor: '#ccc',
+    marginVertical: 10,
+    width: '90%',
+    alignSelf: 'center',
   },
 });

@@ -1,6 +1,10 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import Colors from '../Colors/colors';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/slices/cartSlice';
+import { use } from 'react';
+
 
 export default function ProductTile({
   route,
@@ -11,6 +15,9 @@ export default function ProductTile({
   id,
 }) {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+
 
   const ProductTilePress = () => {
     return (
@@ -20,7 +27,8 @@ export default function ProductTile({
   };
 
   const addButtonPress = () => {
-    return console.log('addButton Pressed');
+    dispatch(addToCart({ id,  name , description, price, rating, }));
+    Alert.alert('Item added to cart')
   };
 
   return (

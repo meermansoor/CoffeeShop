@@ -2,8 +2,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider } from 'react-redux';
+import { View, StyleSheet } from 'react-native';
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 import OnboardingScreen from './src/Screens/OnboardingScreen';
 import HomePage from './src/Screens/HomePage';
@@ -11,14 +12,20 @@ import Colors from './src/assets/Colors/colors';
 import DetailScreen from './src/Screens/DetailScreen';
 import coffeeStore from './src/redux/store';
 import OrderScreen from './src/Screens/OrderScreen';
-
-import Home from './src/assets/images/svg/Home.svg';
-import HomeIcon from './src/assets/images/svg/HomeIcon';
 import CartScreen from './src/Screens/BottomTabs/CartScreen';
+import NotificationScreen from './src/Screens/BottomTabs/NotificationScreen';
+import FavourtiesScreen from './src/Screens/BottomTabs/FavouritesScreen';
+
+
+import Heart from './src/assets/images/svg/Heart.svg';
+import Notification from './src/assets/images/svg/Notification.svg';
+import HomeIcon from './src/assets/images/svg/HomeIcon';
 import BagIcon from './src/assets/images/svg/BagIcon';
+
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
+
 
 function BottomTabNav() {
   return (
@@ -32,7 +39,7 @@ function BottomTabNav() {
           elevation: 6,
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
-          padding: 24,
+          paddingTop: 24,
         },
         tabBarActiveTintColor: Colors.primary,
       }}
@@ -41,13 +48,14 @@ function BottomTabNav() {
         name="HomePage"
         component={HomePage}
         options={{
-          tabBarLabel: 'Home',
+          tabBarShowLabel: false,
           tabBarIcon: ({ color, size, focused, fill }) => (
+
             <HomeIcon
               width={24}
               height={24}
+              stroke={focused ? Colors.primary : Colors.gray}
               fill={focused ? Colors.primary : 'white'}
-              stroke={focused?Colors.primary: Colors.gray}
             />
           ),
         }}
@@ -56,15 +64,36 @@ function BottomTabNav() {
         name="CartScreen"
         component={CartScreen}
         options={{
-          tabBarLabel: 'Home',
+          tabBarShowLabel: false,
           tabBarIcon: ({ color, size, focused, fill }) => (
+            <View>
+              
             <BagIcon
               width={24}
               height={24}
-              fill={focused ? Colors.primary : 'white'}
-              stroke={focused?Colors.primary: Colors.gray}
+              fill={focused ? Colors.primary : 'gray'}
             />
+            </View>
           ),
+        }}
+      />
+
+      <BottomTab.Screen
+        name="Favorites"
+        component={FavourtiesScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size, focused, fill }) => (
+            <Heart />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Notification"
+        component={NotificationScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color, size, focused, fill }) => <Notification />,
         }}
       />
     </BottomTab.Navigator>
@@ -72,7 +101,7 @@ function BottomTabNav() {
 }
 
 export default function App() {
-  console.log('App component is rendering');
+
 
   return (
     <Provider store={coffeeStore}>
@@ -83,12 +112,29 @@ export default function App() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="BottomTab" component={BottomTabNav} />
-          <Stack.Screen name="DetailScr" component={DetailScreen} />
-          <Stack.Screen name="Onboard" component={OnboardingScreen} />
+          <Stack.Screen name="BottomTab"   component={BottomTabNav} />
+          <Stack.Screen name="DetailScr"   component={DetailScreen} />
+          <Stack.Screen name="Onboard"     component={OnboardingScreen} />
           <Stack.Screen name="OrderScreen" component={OrderScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
   );
 }
+
+
+const styles = StyleSheet.create({
+  activeIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#C67C4E', // shadow color matches fill
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8, // Android shadow
+  },
+  inactiveIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

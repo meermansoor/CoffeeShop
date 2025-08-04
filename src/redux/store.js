@@ -1,8 +1,14 @@
-import React from "react";
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
+import productReducer from './slices/productSlice.js';
+import cartReducer from './slices/cartSlice.js';
+import userReducer from './slices/userSlice.js';
 
-const coffeeStore = configureStore({
-  reducer: {},
+const store = configureStore({
+  reducer: {
+    product: productReducer,
+    cart: cartReducer,
+    user: userReducer,
+  },
 });
 
-export default coffeeStore;
+export default store;
