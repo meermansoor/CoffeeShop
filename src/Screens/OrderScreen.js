@@ -12,11 +12,18 @@ export default function OrderScreen() {
   const cartItems = useSelector(state => state.cart.cartItems);
 
 
-  function cartItemRenderHandler(item){
-
-    <CartItemTile />
-
+  function cartItemRenderHandler({ item }) {
+    return (
+      <CartItemTile
+        name={item.name}
+        description={item.description}
+        price={item.price}
+        imageURL={item.imageURL}
+        quantity={item.quantity}
+      />
+    );
   }
+  
 
   return (
     <View style={styles.container}>
@@ -93,7 +100,7 @@ export default function OrderScreen() {
       <View>
       <FlatList
         data={cartItems}
-        keyExtractor={(item)=> item.id}
+        keyExtractor={(item)=> item.id + '_' + item.name}
         renderItem={cartItemRenderHandler}
         
       />

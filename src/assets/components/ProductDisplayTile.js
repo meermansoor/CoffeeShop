@@ -3,7 +3,6 @@ import Colors from '../Colors/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/slices/cartSlice';
-import { use } from 'react';
 
 
 export default function ProductTile({
@@ -42,7 +41,7 @@ export default function ProductTile({
           <Text style={styles.rating}>{rating}</Text>
         </View>
         <Image
-          source={require('../images/productImages/pimage.jpg')}
+          source={{uri: 'https://res.cloudinary.com/doawcr6a6/image/upload/v1754343003/pimage_eklsfd.jpg'}}
           style={styles.image}
         />
       </View>
