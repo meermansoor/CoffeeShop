@@ -15,53 +15,53 @@ import { useEffect, useState } from 'react';
 import ProductTile from '../assets/components/ProductDisplayTile';
 
 function HomePage() {
-  const [products, setProducts] = useState();
+  // const [products, setProducts] = useState();
   const [selectedCategory, setSelectedCategory] = useState('1');
 
 
 
-  useEffect(() => {
-    fetch('https://<your-database-name>.firebaseio.com/products.json')
-      .then((response) => response.json())
-      .then((data) => {
-        const loadedProducts = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
-        setProducts(loadedProducts);
-      })
-      .catch((error) => console.error('Error fetching products:', error));
-  }, []);
-  // const products = [
-  //   {
-  //     id: '1',
-  //     name: 'Caffe Mocha',
-  //     description: 'Deep Foam',
-  //     price: 4.53,
-  //     rating: 4.8,
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Flat White',
-  //     description: 'Espresso',
-  //     price: 3.53,
-  //     rating: 4.8,
-  //   },
-  //   {
-  //     id: '3',
-  //     name: 'Mocha Fusi',
-  //     description: 'Ice/Hot',
-  //     price: 7.53,
-  //     rating: 4.8,
-  //   },
-  //   {
-  //     id: '4',
-  //     name: 'Caffe Panna',
-  //     description: 'Ice/Hot',
-  //     price: 5.53,
-  //     rating:4.9
-  //   },
-  // ];
+  // useEffect(() => {
+  //   fetch('https://<your-database-name>.firebaseio.com/products.json')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       const loadedProducts = Object.keys(data).map((key) => ({
+  //         id: key,
+  //         ...data[key],
+  //       }));
+  //       setProducts(loadedProducts);
+  //     })
+  //     .catch((error) => console.error('Error fetching products:', error));
+  // }, []);
+  const products = [
+    {
+      id: '1',
+      name: 'Caffe Mocha',
+      description: 'Deep Foam',
+      price: 4.53,
+      rating: 4.8,
+    },
+    {
+      id: '2',
+      name: 'Flat White',
+      description: 'Espresso',
+      price: 3.53,
+      rating: 4.8,
+    },
+    {
+      id: '3',
+      name: 'Mocha Fusi',
+      description: 'Ice/Hot',
+      price: 7.53,
+      rating: 4.8,
+    },
+    {
+      id: '4',
+      name: 'Caffe Panna',
+      description: 'Ice/Hot',
+      price: 5.53,
+      rating:4.9
+    },
+  ];
 
 
 

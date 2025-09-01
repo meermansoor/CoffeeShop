@@ -3,10 +3,13 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Colors from '../assets/Colors/colors';
+import { addToCart } from '../redux/slices/cartSlice';
+import { useDispatch } from 'react-redux';
 
 export default function DetailScreen() {
   const route = useRoute();
   const product = route.params;
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
   const [sizeSelected, setSizeSelected] = useState('s');
@@ -48,9 +51,15 @@ export default function DetailScreen() {
     },
   ];
 
-  function buyButtonHandler() {
-    return navigation.navigate('OrderScreen');
+  const buyButtonHandler= () => {
+    const productWithSize = {
+      ...product,
+      size: sizeSelected
+    };
+    dispatch(addToCart(productWithSize));
+    navigation.navigate('OrderScreen', { selectedItem: productWithSize });
   }
+  
 
   return (
     <View style={styles.container}>

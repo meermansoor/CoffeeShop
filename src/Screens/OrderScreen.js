@@ -1,16 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Colors from '../assets/Colors/colors';
 import { useSelector } from 'react-redux';
 import Edit from '../assets/images/svg/Edit.svg';
 import Document from '../assets/images/svg/Document.svg';
 import CartItemTile from '../assets/components/CartItemTile';
+import Discount from '../assets/images/svg/Discount';
+import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 
 export default function OrderScreen() {
   const [selectedOption, setSelectedOption] = useState('Deliver');
   const cartItems = useSelector(state => state.cart.cartItems);
 
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity, 
+    0
+  );
+  
+  const deliveryCharges = 2
+
+  const finalAmount = totalPrice + deliveryCharges
 
   function cartItemRenderHandler({ item }) {
     return (
@@ -23,7 +39,6 @@ export default function OrderScreen() {
       />
     );
   }
-  
 
   return (
     <View style={styles.container}>
@@ -98,13 +113,55 @@ export default function OrderScreen() {
         <View style={styles.line} />
       </View>
       <View>
-      <FlatList
-        data={cartItems}
-        keyExtractor={(item)=> item.id + '_' + item.name}
-        renderItem={cartItemRenderHandler}
-        
-      />
+        <FlatList
+          data={cartItems}
+          keyExtractor={item => item.id + '_' + item.name}
+          renderItem={cartItemRenderHandler}
+        />
+      </View>
+      <View style={styles.paymentContainer}>
+      <View style={styles.discountContainer}>
+        <View style={{ flexDirection: 'row' }}>
+          <Discount />
+          <Text style={styles.discountTxt}> Discount is Applied</Text>
+        </View>
+        <TouchableOpacity>
+          <FontAwesome6 name="angle-right" color={'black'} size={20} />
+        </TouchableOpacity>
+      </View>
+        <Text
+          style={[
+            styles.title,
+            { textAlign: 'auto', marginHorizontal: 20, marginVertical: 15 },
+          ]}
+        >
+          Payment Summary
+        </Text>
+        <View style={styles.footer}>
 
+        <View style={styles.priceContainer}>
+          <Text style={styles.price}>Price</Text>
+          <Text style={styles.price}>${totalPrice}</Text>
+        </View>
+        <View style={styles.priceContainer}>
+          <Text style={styles.price}>Delivery Fee</Text>
+          <Text style={styles.price} >${deliveryCharges}</Text>
+        </View>
+        </View>
+      <TouchableOpacity style={styles.paymentOption}>
+        <View style={{flexDirection:'row', gap:20, justifyContent:'center', alignItems:'center'}}>
+        <FontAwesome6 name='wallet' color={Colors.primary} size={24} />
+        <View>
+        <Text style={styles.paymentText}>Cash/Wallet</Text>
+        <Text style={[styles.paymentText,{color:Colors.primary}]}>{(totalPrice + deliveryCharges).toFixed(2)}</Text>
+        </View>
+        </View>
+        <FontAwesome6 name='angle-down' color={'black'} size={24} />
+
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.orderButton}>
+        <Text style={styles.buttonText}> Order </Text>
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -117,7 +174,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 20,
+    marginVertical: 40,
     paddingHorizontal: 30,
   },
   title: {
@@ -130,6 +187,7 @@ const styles = StyleSheet.create({
     padding: 4,
     backgroundColor: '#EDEDED',
     marginHorizontal: 20,
+    marginBottom:20,
     borderRadius: 8,
     flexDirection: 'row',
     gap: 10,
@@ -198,36 +256,93 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   cartItemsContainer: {
-  padding: 20,
-},
-cartItem: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  marginBottom: 10,
-  backgroundColor: '#f2f2f2',
-  padding: 10,
-  borderRadius: 8,
-},
-itemName: {
-  fontFamily: 'Sora-SemiBold',
-  fontSize: 16,
-},
-itemDetails: {
-  fontFamily: 'Sora-Regular',
-  fontSize: 14,
-  color: '#555',
-},
-emptyText: {
-  textAlign: 'center',
-  marginTop: 40,
-  color: '#999',
-  fontFamily: 'Sora-Regular',
-},
-totalText: {
-  fontSize: 18,
-  fontFamily: 'Sora-SemiBold',
-  marginTop: 20,
-  textAlign: 'right',
-},
+    padding: 20,
+  },
+  cartItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    backgroundColor: '#f2f2f2',
+    padding: 10,
+    borderRadius: 8,
+  },
+  itemName: {
+    fontFamily: 'Sora-SemiBold',
+    fontSize: 16,
+  },
+  itemDetails: {
+    fontFamily: 'Sora-Regular',
+    fontSize: 14,
+    color: '#555',
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 40,
+    color: '#999',
+    fontFamily: 'Sora-Regular',
+  },
+  totalText: {
+    fontSize: 18,
+    fontFamily: 'Sora-SemiBold',
+    marginTop: 20,
+    textAlign: 'right',
+  },
+  discountContainer: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginVertical: 10,
+    justifyContent: 'space-between',
+    borderWidth:1,
+    borderColor:Colors.lightGray,
+    borderRadius:16,
+    padding:20
+  },
+  discountTxt: {
+    fontFamily: 'Sora-SemiBold',
+    fontSize: 14,
+    marginLeft: 16,
+  },
+  priceContainer:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    marginHorizontal:25
+  },
+  price:{
+    fontFamily:'Sora-Regular',
+  },
+  paymentContainer:{
+    width:'100%',
+    padding:8,
+    gap:8,
+    position: "absolute",
+    bottom:0,
+  },
+  paymentOption:{
+    flexDirection:'row',
+    gap:16,
+    marginTop:20,
+    justifyContent:'space-between',
+    alignItems:'center',
+    paddingHorizontal:16,
+
+  },
+  paymentText:{
+    fontFamily:'Sora-SemiBold',
+    fontSize:14
+  },
+  orderButton:{
+    backgroundColor:Colors.primary,
+    borderRadius:16,
+    paddingVertical:20,
+    paddingHorizontal:16,
+    marginTop:10,
+    marginHorizontal:5,
+  }
 
 });
+
+const payStyles = StyleSheet.create({
+
+})
+
+// AIzaSyBvZxPchfdOd6VvLIsYYt01iLnA9eiuhFg  Google Maps Api

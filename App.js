@@ -62,7 +62,7 @@ function BottomTabNav() {
       />
       <BottomTab.Screen
         name="CartScreen"
-        component={CartScreen}
+        component={OrderScreen}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size, focused, fill }) => (
@@ -84,7 +84,7 @@ function BottomTabNav() {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size, focused, fill }) => (
-            <Heart />
+            <Heart fill={focused?Colors.primary:Colors.gray}/>
           ),
         }}
       />

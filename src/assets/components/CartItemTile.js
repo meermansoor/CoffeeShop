@@ -17,11 +17,11 @@ export default function CartItemTile({
     const dispatch = useDispatch();
 
     const increaseQuantity = () => {
-      dispatch(incrementQuantity(id));
+      dispatch(incrementQuantity(name));
     };
     
     const decreaseQuantity = () => {
-      dispatch(decrementQuantity(id));
+      dispatch(decrementQuantity(name));
     };
     
     return (
@@ -41,7 +41,7 @@ export default function CartItemTile({
             </TouchableOpacity>
             <Text style={styles.quantityText}>{quantity}</Text>
             <TouchableOpacity style={styles.icon} onPress={increaseQuantity}>
-            <AntDesign name='plus' size={16} color={'black'}/>
+            <AntDesign name='plus' size={16} color={'black'} />
             </TouchableOpacity>
           </View>
         </View>
@@ -92,16 +92,16 @@ const styles = StyleSheet.create({
       gap: 15,
       marginHorizontal:20,
     },
-    icon: {
-      width: 24,
-      height: 24,
-      borderRadius: 15,
-      backgroundColor: 'white',
-      justifyContent:'center',
-      alignItems:'center',
-      elevation:1,
+    // icon: {
+    //   width: 24,
+    //   height: 24,
+    //   borderRadius: 15,
+    //   backgroundColor: 'white',
+    //   justifyContent:'center',
+    //   alignItems:'center',
+    //   elevation:1,
 
-    },
+    // },
     iconText: {
       fontFamily: 'Sora-Regular',
       fontSize: 14,
