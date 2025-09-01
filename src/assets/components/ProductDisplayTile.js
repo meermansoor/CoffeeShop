@@ -16,13 +16,12 @@ export default function ProductTile({
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-
+  // Debug logging
+  console.log('ProductTile - Received props:', { id, name, description, price, rating });
 
   const ProductTilePress = () => {
-    return (
-      navigation.navigate('DetailScr', { id: id, name: name ,description: description, price:price, rating:rating, }),
-      console.log(`${id} sent`)
-    );
+    console.log('ProductTile - Navigating to DetailScreen with:', { id, name, description, price, rating });
+    navigation.navigate('DetailScreen', { id: id, name: name, description: description, price: price, rating: rating });
   };
 
   const addButtonPress = () => {

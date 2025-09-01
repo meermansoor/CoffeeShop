@@ -1,10 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Provider } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
-
-
 
 import OnboardingScreen from './src/Screens/OnboardingScreen';
 import HomePage from './src/Screens/HomePage';
@@ -15,7 +15,7 @@ import OrderScreen from './src/Screens/OrderScreen';
 import CartScreen from './src/Screens/BottomTabs/CartScreen';
 import NotificationScreen from './src/Screens/BottomTabs/NotificationScreen';
 import FavourtiesScreen from './src/Screens/BottomTabs/FavouritesScreen';
-
+import MapScreen from './src/Screens/MapScreen';
 
 import Heart from './src/assets/images/svg/Heart.svg';
 import Notification from './src/assets/images/svg/Notification.svg';
@@ -90,7 +90,7 @@ function BottomTabNav() {
       />
       <BottomTab.Screen
         name="Notification"
-        component={NotificationScreen}
+        component={MapScreen}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size, focused, fill }) => <Notification />,
@@ -107,13 +107,13 @@ export default function App() {
     <Provider store={coffeeStore}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Onboard"
+          initialRouteName="BottomTab"
           screenOptions={{
             headerShown: false,
           }}
         >
           <Stack.Screen name="BottomTab"   component={BottomTabNav} />
-          <Stack.Screen name="DetailScr"   component={DetailScreen} />
+          <Stack.Screen name="DetailScreen"   component={DetailScreen} />
           <Stack.Screen name="Onboard"     component={OnboardingScreen} />
           <Stack.Screen name="OrderScreen" component={OrderScreen} />
         </Stack.Navigator>

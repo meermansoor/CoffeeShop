@@ -4,11 +4,17 @@
  const LoginPage = () => {
    return (
      <View>
-       <Text>LoginPage</Text>
+       <Text>FavouritesScreen</Text>
      </View>
    )
  }
  
  export default LoginPage
  
- const styles = StyleSheet.create({})
+ const styles = StyleSheet.create({
+    container:{
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center',
+    }
+ })

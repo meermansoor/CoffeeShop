@@ -150,6 +150,7 @@ function HomePage() {
             }}
             renderItem={({ item }) => (
               <ProductTile
+                id={item.id}
                 name={item.name}
                 description={item.description}
                 price={item.price}

@@ -5,19 +5,22 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  ScrollView,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Colors from '../assets/Colors/colors';
-import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+
 import Edit from '../assets/images/svg/Edit.svg';
 import Document from '../assets/images/svg/Document.svg';
 import CartItemTile from '../assets/components/CartItemTile';
 import Discount from '../assets/images/svg/Discount';
-import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 
 export default function OrderScreen() {
   const [selectedOption, setSelectedOption] = useState('Deliver');
   const cartItems = useSelector(state => state.cart.cartItems);
+  const navigation = useNavigation();
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity, 
@@ -41,9 +44,9 @@ export default function OrderScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.goBack()}>
           <FontAwesome6 name="angle-left" color={'black'} size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Order</Text>
@@ -120,7 +123,7 @@ export default function OrderScreen() {
         />
       </View>
       <View style={styles.paymentContainer}>
-      <View style={styles.discountContainer}>
+      <TouchableOpacity style={styles.discountContainer}>
         <View style={{ flexDirection: 'row' }}>
           <Discount />
           <Text style={styles.discountTxt}> Discount is Applied</Text>
@@ -128,7 +131,7 @@ export default function OrderScreen() {
         <TouchableOpacity>
           <FontAwesome6 name="angle-right" color={'black'} size={20} />
         </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
         <Text
           style={[
             styles.title,
@@ -159,11 +162,13 @@ export default function OrderScreen() {
         <FontAwesome6 name='angle-down' color={'black'} size={24} />
 
       </TouchableOpacity>
-      <TouchableOpacity style={styles.orderButton}>
+      <TouchableOpacity style={styles.orderButton} onPress={()=>{
+        navigation.navigate('MapScreen')
+      }}>
         <Text style={styles.buttonText}> Order </Text>
       </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -314,8 +319,10 @@ const styles = StyleSheet.create({
     width:'100%',
     padding:8,
     gap:8,
-    position: "absolute",
-    bottom:0,
+    // position: "absolute",
+    // bottom:0,
+    alignSelf:'flex-end',
+    zIndex:2,
   },
   paymentOption:{
     flexDirection:'row',

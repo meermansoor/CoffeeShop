@@ -1,21 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Colors from '../assets/Colors/colors';
 import { addToCart } from '../redux/slices/cartSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavourite, removeFavourite } from '../redux/slices/favouriteSlice';
 
 export default function DetailScreen() {
   const route = useRoute();
   const product = route.params;
   const dispatch = useDispatch();
+  const favouriteItems = useSelector(state => state.favourites.favouriteItems);
 
   const navigation = useNavigation();
   const [sizeSelected, setSizeSelected] = useState('s');
   const [expanded, setExpanded] = useState(false);
 
+  // Check if current product is in favorites
+  const isFavourite = favouriteItems.some(item => item.id === product.id);
+
+  // Debug logging
+  useEffect(() => {
+    console.log('DetailScreen - Product ID:', product.id);
+    console.log('DetailScreen - Favourite items:', favouriteItems);
+    console.log('DetailScreen - Is favourite:', isFavourite);
+  }, [product.id, favouriteItems, isFavourite]);
+
   const toggleExpanded = () => setExpanded(!expanded);
+
 
   const longDescription =
     'This is a luxurious blend crafted from premium Arabica beans, delicately roasted and paired with creamy milk and deep chocolate or espresso tones. It’s an ideal choice whether you enjoy it hot or iced. Perfect for cozy mornings, afternoon pick-me-ups, or evening relaxation. Sip and savor the rich notes with every cup.';
@@ -60,16 +73,32 @@ export default function DetailScreen() {
     navigation.navigate('OrderScreen', { selectedItem: productWithSize });
   }
   
+  const favouriteHandler = () => {
+    if (isFavourite) {
+      dispatch(removeFavourite(product.id));
+      console.log('Removed from favourites:', product.name);
+    } else {
+      dispatch(addFavourite(product));
+      console.log('Added to favourites:', product.name);
+    }
+  }
+
+
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.goBack()}>
           <FontAwesome6 name="angle-left" color={'black'} size={24} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Detail</Text>
-        <TouchableOpacity>
-          <FontAwesome6 name="heart" color={'black'} size={24} />
+        <TouchableOpacity onPress={favouriteHandler} style={styles.favouriteButton}> 
+          <FontAwesome6 
+            name={isFavourite ? "heart" : "heart"} 
+            color={isFavourite ? Colors.primary : '#666'} 
+            size={24} 
+            solid={isFavourite}
+          />
         </TouchableOpacity>
       </View>
       <Image
@@ -318,5 +347,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: '90%',
     alignSelf: 'center',
+  },
+  favouriteButton: {
+    padding: 5,
   },
 });
