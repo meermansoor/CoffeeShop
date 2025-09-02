@@ -6,13 +6,18 @@ import {
   TextInput,
   Image,
   FlatList,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Colors from '../assets/Colors/colors';
 import { useEffect, useState } from 'react';
 import ProductTile from '../assets/components/ProductDisplayTile';
+
+const { width, height } = Dimensions.get('window');
+const FIRST_BOX_HEIGHT = height * 0.3; // 30% of screen height
+const SECOND_BOX_TOP = FIRST_BOX_HEIGHT; // Position second box below first
 
 function HomePage() {
   // const [products, setProducts] = useState();
@@ -39,6 +44,7 @@ function HomePage() {
       description: 'Deep Foam',
       price: 4.53,
       rating: 4.8,
+      category: 'Coffee',
     },
     {
       id: '2',
@@ -46,6 +52,7 @@ function HomePage() {
       description: 'Espresso',
       price: 3.53,
       rating: 4.8,
+      category: 'Coffee',
     },
     {
       id: '3',
@@ -53,16 +60,97 @@ function HomePage() {
       description: 'Ice/Hot',
       price: 7.53,
       rating: 4.8,
+      category: 'Coffee',
     },
     {
       id: '4',
       name: 'Caffe Panna',
       description: 'Ice/Hot',
       price: 5.53,
-      rating:4.9
+      rating: 4.9,
+      category: 'Coffee',
+    },
+    {
+      id: '5',
+      name: 'Green Tea',
+      description: 'Refreshing',
+      price: 2.99,
+      rating: 4.5,
+      category: 'Tea',
+    },
+    {
+      id: '6',
+      name: 'Earl Grey',
+      description: 'Classic Blend',
+      price: 3.25,
+      rating: 4.7,
+      category: 'Tea',
+    },
+    {
+      id: '7',
+      name: 'Orange Juice',
+      description: 'Fresh Squeezed',
+      price: 4.99,
+      rating: 4.6,
+      category: 'Juice',
+    },
+    {
+      id: '8',
+      name: 'Chocolate Cake',
+      description: 'Rich & Moist',
+      price: 6.99,
+      rating: 4.9,
+      category: 'Cake',
+    },
+    {
+      id: '9',
+      name: 'Vanilla Ice Cream',
+      description: 'Creamy Delight',
+      price: 3.99,
+      rating: 4.4,
+      category: 'Ice Cream',
+    },
+    {
+      id: '10',
+      name: 'Americano',
+      description: 'Strong & Bold',
+      price: 3.99,
+      rating: 4.6,
+      category: 'Coffee',
+    },
+    {
+      id: '11',
+      name: 'Cappuccino',
+      description: 'Perfect Balance',
+      price: 4.25,
+      rating: 4.7,
+      category: 'Coffee',
+    },
+    {
+      id: '12',
+      name: 'Chamomile Tea',
+      description: 'Calming Herbs',
+      price: 2.75,
+      rating: 4.3,
+      category: 'Tea',
     },
   ];
 
+  // Filter products based on selected category
+  const getCategoryName = (categoryId) => {
+    const categoryMap = {
+      '1': 'Coffee',
+      '2': 'Tea',
+      '3': 'Juice',
+      '4': 'Cake',
+      '5': 'Ice Cream',
+    };
+    return categoryMap[categoryId] || 'Coffee';
+  };
+
+  const filteredProducts = products.filter(product => 
+    product.category === getCategoryName(selectedCategory)
+  );
 
 
   const handleCategoryPress = categoryId => {
@@ -92,7 +180,11 @@ function HomePage() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView 
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollViewContent}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.background}>
         <View style={styles.SecondBox} />
       </View>
@@ -108,7 +200,7 @@ function HomePage() {
         <View style={styles.searchContainer}>
           <View style={styles.input}>
             <Ionicons name="search" size={24} color="#D8D8D8" />
-            <TextInput placeholder="Search for Coffee" />
+            <TextInput placeholder="Search for Coffee" placeholderTextColor={'#D8D8D8'} />
           </View>
           <TouchableOpacity
             style={styles.filterButton}
@@ -139,25 +231,36 @@ function HomePage() {
             showsHorizontalScrollIndicator={false}
           />
         </View>
-        <View sytle={styles.coffeeItemsContainer}>
-          <FlatList
-            data={products}
-            keyExtractor={item => item.id}
-            numColumns={2}
-            columnWrapperStyle={{
-              marginBottom: 10,
-              marginHorizontal:20,
-            }}
-            renderItem={({ item }) => (
-              <ProductTile
-                id={item.id}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                rating={item.rating}
-              />
-            )}
-          />
+
+        <View style={styles.coffeeItemsContainer}>
+          {filteredProducts.length === 0 ? (
+            <View style={styles.noItemsContainer}>
+              <Text style={styles.noItemsText}>No items available</Text>
+              <Text style={styles.noItemsSubText}>
+                No products found for {getCategoryName(selectedCategory)}
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={filteredProducts}
+              keyExtractor={item => item.id}
+              numColumns={2}
+              columnWrapperStyle={{
+                gap: 10,
+                marginBottom: 10,
+                marginHorizontal:10,
+              }}
+              renderItem={({ item }) => (
+                <ProductTile
+                  id={item.id}
+                  name={item.name}
+                  description={item.description}
+                  price={item.price}
+                  rating={item.rating}
+                />
+              )}
+            />
+          )}
         </View>
       </View>
     </ScrollView>
@@ -173,29 +276,33 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: -1,
+    zIndex: -2, // Lower z-index to ensure it's behind everything
   },
   FirstBox: {
     backgroundColor: Colors.dark,
-    height: '30%',
+    height: FIRST_BOX_HEIGHT, // Fixed pixel height instead of percentage
     width: '100%',
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 0,
+    zIndex: -1, // Higher than background but lower than content
   },
   SecondBox: {
     backgroundColor: Colors.background,
-    height: '70%',
+    height: height - FIRST_BOX_HEIGHT, // Cover remaining height
     width: '100%',
     position: 'absolute',
-    top: '30%',
+    top: SECOND_BOX_TOP, // Fixed top position based on FirstBox height
     left: 0,
     right: 0,
+    zIndex: -1, // Higher than background but lower than content
   },
   container: {
     flex: 1,
+    minHeight: '100%',
+    position: 'relative',
+    height: '100%', // Fixed height to prevent changes
   },
   title: {
     fontSize: 24,
@@ -212,6 +319,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
+    zIndex: 1, // Ensure content is above background
   },
   locationText: {
     color: '#A2A2A2',
@@ -235,6 +343,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     paddingHorizontal: 20,
     paddingVertical: 10,
+    zIndex: 1, // Ensure content is above background
   },
   filterButton: {
     height: 52,
@@ -266,6 +375,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginTop: 10,
     marginHorizontal: 20,
+    zIndex: 1, // Ensure content is above background
   },
   promoImage: {
     width: '100%',
@@ -277,6 +387,7 @@ const styles = StyleSheet.create({
   categoryContainer: {
     marginTop: 10,
     marginHorizontal: 30,
+    zIndex: 1, // Ensure content is above background
   },
   categoryItem: {
     alignItems: 'center',
@@ -305,4 +416,38 @@ const styles = StyleSheet.create({
     fontFamily: 'Sora-SemiBold',
     textAlign: 'center',
   },
+  noItemsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+    minHeight: 300,
+  },
+  noItemsText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.dark,
+    marginBottom: 10,
+  },
+  noItemsSubText: {
+    fontSize: 14,
+    color: '#A2A2A2',
+    textAlign: 'center',
+  },
+  coffeeItemsContainer: {
+    minHeight: 400,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    zIndex: 1, // Ensure content is above background
+  },
+  scrollView: {
+    flex: 1,
+    zIndex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    position: 'relative',
+    zIndex: 1,
+  },
+
 });

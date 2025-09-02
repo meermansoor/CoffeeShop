@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
   orderButton:{
     backgroundColor:Colors.primary,
     borderRadius:16,
-    paddingVertical:20,
+    paddingVertical:19,
     paddingHorizontal:16,
     marginTop:10,
     marginHorizontal:5,

@@ -3,7 +3,7 @@ import Svg, { Path } from 'react-native-svg';
 import Colors from '../../Colors/colors';
 /* SVGR has dropped some elements not supported by react-native-svg: title */
 const HomeIcon = ({props, fill, stroke}) => (
-  <Svg width={24} height={24} focusable={true} fill={fill} stroke={stroke} {...props}>
+  <Svg width={24} height={24} focusable={true} fill="none" stroke={stroke} {...props}>
     <Path
       fill={fill}
       fillRule="evenodd"

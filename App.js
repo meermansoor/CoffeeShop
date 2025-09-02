@@ -32,6 +32,7 @@ function BottomTabNav() {
     <BottomTab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarHideOnKeyboard: true,
         tabBarStyle: {
           height: 99,
           alignItems: 'center',
@@ -90,10 +91,12 @@ function BottomTabNav() {
       />
       <BottomTab.Screen
         name="Notification"
-        component={MapScreen}
+        component={NotificationScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, focused, fill }) => <Notification />,
+          tabBarIcon: ({ color, size, focused, fill }) => (
+            <Notification />
+          ),
         }}
       />
     </BottomTab.Navigator>
@@ -116,6 +119,7 @@ export default function App() {
           <Stack.Screen name="DetailScreen"   component={DetailScreen} />
           <Stack.Screen name="Onboard"     component={OnboardingScreen} />
           <Stack.Screen name="OrderScreen" component={OrderScreen} />
+          <Stack.Screen name="MapScreen" component={MapScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
