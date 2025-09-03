@@ -5,19 +5,22 @@ import {
   TouchableOpacity,
   ScrollView,
   Animated,
+  Image,
 } from 'react-native';
 import React, { useState, useRef } from 'react';
 import MapView, { PROVIDER_GOOGLE, MAP_TYPES } from 'react-native-maps';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
+import BikeIcon from '../assets/images/svg/bike.svg';
+import Colors from '../assets/Colors/colors';
 
 const MapScreen = () => {
   const navigation = useNavigation();
   const [isExpanded, setIsExpanded] = useState(false);
-  const animatedHeight = useRef(new Animated.Value(120)).current; 
+  const animatedHeight = useRef(new Animated.Value(120)).current;
 
   const toggleExpansion = () => {
-    const toValue = isExpanded ? 120 : 320; 
+    const toValue = isExpanded ? 120 : 320;
 
     Animated.timing(animatedHeight, {
       toValue,
@@ -43,6 +46,8 @@ const MapScreen = () => {
         }}
         showsUserLocation={true}
         showsMyLocationButton={true}
+        showsCompass={true}
+        showsPointsOfInterest={true}
       />
 
       <TouchableOpacity
@@ -52,12 +57,11 @@ const MapScreen = () => {
         <FontAwesome6 name="angle-left" color={'black'} size={20} />
       </TouchableOpacity>
 
-         <TouchableOpacity
-        onPress={() => navigation.goBack()}
+      {/* <TouchableOpacity
         style={styles.rightButton}
       >
         <FontAwesome6 name="angle-right" color={'black'} size={20} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <Animated.View
         style={[styles.etaAddressContainer, { height: animatedHeight }]}
       >
@@ -100,7 +104,7 @@ const MapScreen = () => {
               {/* Delivery Status Card */}
               <View style={styles.deliveryCard}>
                 <View style={styles.deliveryIconContainer}>
-                  <FontAwesome6 name="motorcycle" color="#FF9800" size={24} />
+                  <BikeIcon width={44} height={44} />
                 </View>
                 <View style={styles.deliveryTextContainer}>
                   <Text style={styles.deliveryTitle}>Delivered your order</Text>
@@ -114,7 +118,10 @@ const MapScreen = () => {
               <View style={styles.driverCard}>
                 <View style={styles.driverProfile}>
                   <View style={styles.profilePicture}>
-                    <FontAwesome6 name="user" color="#666" size={20} />
+                    <Image
+                      source={require('../assets/images/driver.png')}
+                      style={styles.profilePicture}
+                    />
                   </View>
                   <View style={styles.driverInfo}>
                     <Text style={styles.driverName}>Brooklyn Simmons</Text>
@@ -194,7 +201,7 @@ const styles = StyleSheet.create({
   },
   etaText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
     marginLeft: 5,
     textAlign: 'center',
   },
@@ -203,6 +210,7 @@ const styles = StyleSheet.create({
     color: '#666',
     marginLeft: 5,
     textAlign: 'center',
+    fontFamily: 'Sora-Regular',
   },
   expandIcon: {
     marginLeft: 10,
@@ -220,7 +228,7 @@ const styles = StyleSheet.create({
   },
   progressContainer: {
     marginTop: 10,
-    width: '90%',
+    width: '100%',
     alignSelf: 'center',
   },
   progressBar: {
@@ -243,14 +251,21 @@ const styles = StyleSheet.create({
   },
   deliveryCard: {
     flexDirection: 'row',
-    backgroundColor: '#FF9800',
-    borderRadius: 10,
-    padding: 15,
+    height: 77,
+    paddingVertical: 8,
+    paddingRight: 10,
+    paddingLeft: 12,
+    borderColor: Colors.gray,
+    borderWidth: 1,
+    borderRadius: 12,
     marginBottom: 15,
     alignItems: 'center',
   },
   deliveryIconContainer: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    height: 56,
+    width: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 10,
     padding: 10,
     marginRight: 10,
@@ -259,20 +274,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   deliveryTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: 14,
+    fontFamily: 'Sora-SemiBold',
+    color: Colors.dark,
     marginBottom: 5,
   },
   deliveryDescription: {
-    fontSize: 14,
-    color: 'white',
+    fontSize: 12,
+    color: Colors.gray,
+    fontFamily: 'Sora-Light',
   },
   driverCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
@@ -285,10 +300,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   profilePicture: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#E0E0E0',
+    width: 56,
+    height: 56,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
@@ -298,11 +312,12 @@ const styles = StyleSheet.create({
   },
   driverName: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
   },
   driverRole: {
     fontSize: 14,
     color: '#666',
+    fontFamily: 'Sora-Regular',
   },
   contactButton: {
     backgroundColor: '#4CAF50',
@@ -316,7 +331,7 @@ const styles = StyleSheet.create({
   expandedContent: {
     width: '100%',
     paddingTop: 15,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   scrollViewContainer: {
     flex: 1,

@@ -1,9 +1,28 @@
-import { View, Text, StyleSheet, Image,  TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import Colors from '../assets/Colors/colors';
 
 function OnboardingScreen() {
   const navigation = useNavigation();
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+
+  useEffect(() => {
+    // Check if user is already logged in and navigate accordingly
+    if (isLoggedIn) {
+      navigation.replace('BottomTab');
+    }
+  }, [isLoggedIn, navigation]);
+
+  const handleGetStarted = () => {
+    if (isLoggedIn) {
+      navigation.replace('BottomTab');
+    } else {
+      navigation.replace('LoginPage');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -18,7 +37,7 @@ function OnboardingScreen() {
             Welcome to our cozy coffee corner, where every cup is a delightful for
             you.
           </Text>
-        <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('BottomTab')}>
+        <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
         </View>

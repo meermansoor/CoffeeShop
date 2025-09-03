@@ -1,8 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Provider } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 
@@ -12,20 +10,19 @@ import Colors from './src/assets/Colors/colors';
 import DetailScreen from './src/Screens/DetailScreen';
 import coffeeStore from './src/redux/store';
 import OrderScreen from './src/Screens/OrderScreen';
-import CartScreen from './src/Screens/BottomTabs/CartScreen';
 import NotificationScreen from './src/Screens/BottomTabs/NotificationScreen';
 import FavourtiesScreen from './src/Screens/BottomTabs/FavouritesScreen';
 import MapScreen from './src/Screens/MapScreen';
+import LoginPage from './src/Screens/authScreens/loginPage';
+import SignupPage from './src/Screens/authScreens/SignupPage';
 
 import Heart from './src/assets/images/svg/Heart.svg';
 import Notification from './src/assets/images/svg/Notification.svg';
 import HomeIcon from './src/assets/images/svg/HomeIcon';
 import BagIcon from './src/assets/images/svg/BagIcon';
 
-
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
-
 
 function BottomTabNav() {
   return (
@@ -50,8 +47,7 @@ function BottomTabNav() {
         component={HomePage}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, focused, fill }) => (
-
+          tabBarIcon: ({ focused }) => (
             <HomeIcon
               width={24}
               height={24}
@@ -66,14 +62,13 @@ function BottomTabNav() {
         component={OrderScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, focused, fill }) => (
+          tabBarIcon: ({ focused }) => (
             <View>
-              
-            <BagIcon
-              width={24}
-              height={24}
-              fill={focused ? Colors.primary : 'gray'}
-            />
+              <BagIcon
+                width={24}
+                height={24}
+                fill={focused ? Colors.primary : 'gray'}
+              />
             </View>
           ),
         }}
@@ -84,8 +79,8 @@ function BottomTabNav() {
         component={FavourtiesScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, focused, fill }) => (
-            <Heart fill={focused?Colors.primary:Colors.gray}/>
+          tabBarIcon: ({ focused }) => (
+            <Heart fill={focused ? Colors.primary : Colors.gray}/>
           ),
         }}
       />
@@ -94,7 +89,7 @@ function BottomTabNav() {
         component={NotificationScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, size, focused, fill }) => (
+          tabBarIcon: () => (
             <Notification />
           ),
         }}
@@ -104,28 +99,28 @@ function BottomTabNav() {
 }
 
 export default function App() {
-
-
   return (
     <Provider store={coffeeStore}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="BottomTab"
+          initialRouteName="Onboard"
+          navigationBar={false}
           screenOptions={{
             headerShown: false,
           }}
         >
-          <Stack.Screen name="BottomTab"   component={BottomTabNav} />
-          <Stack.Screen name="DetailScreen"   component={DetailScreen} />
-          <Stack.Screen name="Onboard"     component={OnboardingScreen} />
-          <Stack.Screen name="OrderScreen" component={OrderScreen} />
+          <Stack.Screen name="BottomTab" component={BottomTabNav} />
+          <Stack.Screen name="DetailScreen" component={DetailScreen} />
+          <Stack.Screen name="Onboard" component={OnboardingScreen} />
+          <Stack.Screen name="OrderScreen" component={OrderScreen} /> 
           <Stack.Screen name="MapScreen" component={MapScreen} />
+          <Stack.Screen name="LoginPage" component={LoginPage} />
+          <Stack.Screen name="SignupPage" component={SignupPage} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
   );
 }
-
 
 const styles = StyleSheet.create({
   activeIcon: {

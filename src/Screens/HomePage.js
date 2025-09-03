@@ -14,14 +14,27 @@ import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcon
 import Colors from '../assets/Colors/colors';
 import { useEffect, useState } from 'react';
 import ProductTile from '../assets/components/ProductDisplayTile';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../redux/slices/userSlice';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
-const FIRST_BOX_HEIGHT = height * 0.3; // 30% of screen height
-const SECOND_BOX_TOP = FIRST_BOX_HEIGHT; // Position second box below first
+const FIRST_BOX_HEIGHT = height * 0.3;
+const SECOND_BOX_TOP = FIRST_BOX_HEIGHT;
 
 function HomePage() {
   // const [products, setProducts] = useState();
   const [selectedCategory, setSelectedCategory] = useState('1');
+  const [searchText, setSearchText] = useState('');
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!user.isLoggedIn) {
+      navigation.replace('LoginPage');
+    }
+  }, [user.isLoggedIn, navigation]);
 
 
 
@@ -136,7 +149,6 @@ function HomePage() {
     },
   ];
 
-  // Filter products based on selected category
   const getCategoryName = (categoryId) => {
     const categoryMap = {
       '1': 'Coffee',
@@ -148,9 +160,14 @@ function HomePage() {
     return categoryMap[categoryId] || 'Coffee';
   };
 
-  const filteredProducts = products.filter(product => 
-    product.category === getCategoryName(selectedCategory)
-  );
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = product.category === getCategoryName(selectedCategory);
+    const matchesSearch = searchText.trim() === '' || 
+      product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchText.toLowerCase());
+    
+    return matchesCategory && matchesSearch;
+  });
 
 
   const handleCategoryPress = categoryId => {
@@ -191,16 +208,40 @@ function HomePage() {
       <View style={styles.container}>
         <View style={styles.FirstBox} />
         <View style={styles.locationContainer}>
-          <Text style={styles.locationText}>Location</Text>
-          <TouchableOpacity style={styles.locationButton}>
-            <Text style={styles.locationButtonText}>New York</Text>
-            <Ionicons name="chevron-down" size={20} color="#D8D8D8" />
-          </TouchableOpacity>
+          <View style={styles.locationLeft}>
+            <Text style={styles.locationText}>Location</Text>
+            <TouchableOpacity style={styles.locationButton}>
+              <Text style={styles.locationButtonText}>New York</Text>
+              <Ionicons name="chevron-down" size={20} color="#D8D8D8" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.userInfo}>
+            <Text style={styles.userName}>{user.name || 'Guest'}</Text>
+            <TouchableOpacity 
+              style={styles.logoutButton}
+              onPress={() => dispatch(logout())}
+            >
+              <Ionicons name="log-out-outline" size={20} color="#D8D8D8" />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.searchContainer}>
           <View style={styles.input}>
             <Ionicons name="search" size={24} color="#D8D8D8" />
-            <TextInput placeholder="Search for Coffee" placeholderTextColor={'#D8D8D8'} />
+            <TextInput 
+              placeholder="Search for Coffee" 
+              placeholderTextColor={'#D8D8D8'} 
+              inputMode='search' 
+              keyboardType='search'
+              style={{color: '#D8D8D8'}}
+              value={searchText}
+              onChangeText={setSearchText}
+            />
+            {searchText.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchText('')}>
+                <Ionicons name="close-circle" size={20} color="#D8D8D8" />
+              </TouchableOpacity>
+            )}
           </View>
           <TouchableOpacity
             style={styles.filterButton}
@@ -237,7 +278,10 @@ function HomePage() {
             <View style={styles.noItemsContainer}>
               <Text style={styles.noItemsText}>No items available</Text>
               <Text style={styles.noItemsSubText}>
-                No products found for {getCategoryName(selectedCategory)}
+                {searchText.trim() !== '' 
+                  ? `No products found matching "${searchText}" in ${getCategoryName(selectedCategory)}`
+                  : `No products found for ${getCategoryName(selectedCategory)}`
+                }
               </Text>
             </View>
           ) : (
@@ -320,6 +364,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     zIndex: 1, // Ensure content is above background
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  locationLeft: {
+    flex: 1,
+  },
+  userInfo: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  userName: {
+    color: '#D8D8D8',
+    fontSize: 14,
+    fontFamily: 'Sora-SemiBold',
+    marginBottom: 5,
+    textAlign: 'right',
+  },
+  logoutButton: {
+    padding: 5,
   },
   locationText: {
     color: '#A2A2A2',

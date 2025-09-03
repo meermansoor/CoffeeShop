@@ -6,6 +6,7 @@ import Colors from '../assets/Colors/colors';
 import { addToCart } from '../redux/slices/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFavourite, removeFavourite } from '../redux/slices/favouriteSlice';
+import BikeIcon from '../assets/images/svg/bike.svg';
 
 export default function DetailScreen() {
   const route = useRoute();
@@ -17,10 +18,10 @@ export default function DetailScreen() {
   const [sizeSelected, setSizeSelected] = useState('s');
   const [expanded, setExpanded] = useState(false);
 
-  // Check if current product is in favorites
+
   const isFavourite = favouriteItems.some(item => item.id === product.id);
 
-  // Debug logging
+  
   useEffect(() => {
     console.log('DetailScreen - Product ID:', product.id);
     console.log('DetailScreen - Favourite items:', favouriteItems);
@@ -119,10 +120,7 @@ export default function DetailScreen() {
           </View>
         </View>
         <View style={styles.iconContainer}>
-          <Image
-            source={require('../assets/images/bike.png')}
-            style={styles.deliveryIcons}
-          />
+          <BikeIcon width={35} height={35} />
           <Image
             source={require('../assets/images/milk.png')}
             style={styles.deliveryIcons}
@@ -204,6 +202,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginVertical: 20,
     paddingHorizontal: 30,
   },
