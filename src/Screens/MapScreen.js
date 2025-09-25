@@ -8,16 +8,37 @@ import {
   Image,
 } from 'react-native';
 import React, { useState, useRef } from 'react';
-import MapView, { PROVIDER_GOOGLE, MAP_TYPES } from 'react-native-maps';
+import MapView, 
+{
+  PROVIDER_GOOGLE,
+  MAP_TYPES,
+  Callout,
+  Marker,
+} from 'react-native-maps';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 import BikeIcon from '../assets/images/svg/bike.svg';
 import Colors from '../assets/Colors/colors';
 
+const CustomMarker = () => {
+  return (
+    <View style={styles.markerContainer}>
+      <View style={styles.markerInner}>
+        <BikeIcon width={30} height={30} fill={Colors.primary} />
+      </View>
+      <View style={styles.markerArrow} />
+    </View>
+  );
+};
+
 const MapScreen = () => {
   const navigation = useNavigation();
   const [isExpanded, setIsExpanded] = useState(false);
   const animatedHeight = useRef(new Animated.Value(120)).current;
+
+  const [userLocation, setUserLocation] = useState(null);
+  const mapRef = useRef(null);
+  const hasCenteredRef = useRef(false);
 
   const toggleExpansion = () => {
     const toValue = isExpanded ? 120 : 320;
@@ -38,17 +59,64 @@ const MapScreen = () => {
         provider={PROVIDER_GOOGLE}
         mapPadding={{ top: 20, bottom: 20, left: 20, right: 20 }}
         mapType={MAP_TYPES.STANDARD}
-        initialRegion={{
-          latitude: 19.076,
-          longitude: 72.8777,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        ref={mapRef}
+        initialRegion={
+          userLocation
+            ? {
+                latitude: userLocation.latitude,
+                longitude: userLocation.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }
+            : {
+                latitude: 19.076,
+                longitude: 72.8777,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }
+        }
         showsUserLocation={true}
+        userLocationAnnotationTitle="You are here"
         showsMyLocationButton={true}
         showsCompass={true}
         showsPointsOfInterest={true}
-      />
+        userLocationCalloutEnabled={true}
+        onUserLocationChange={event => {
+          const { latitude, longitude } = event.nativeEvent.coordinate || {};
+          if (typeof latitude === 'number' && typeof longitude === 'number') {
+            setUserLocation({ latitude, longitude });
+            if (!hasCenteredRef.current && mapRef.current) {
+              mapRef.current.animateToRegion(
+                {
+                  latitude,
+                  longitude,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                },
+                800,
+              );
+              hasCenteredRef.current = true;
+            }
+          }
+        }}
+      >
+        <Marker
+          coordinate={{
+            latitude: 25.411937440011343,
+            longitude: 68.26032586337693,
+          }}
+        >
+          <CustomMarker />
+          <Callout>
+            <View style={styles.calloutContainer}>
+              <Text style={styles.calloutTitle}>Delivery Location</Text>
+              <Text style={styles.calloutText}>
+                Your order will arrive here
+              </Text>
+            </View>
+          </Callout>
+        </Marker>
+      </MapView>
 
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -338,5 +406,47 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
+  },
+  markerContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 10,
+  },
+  markerInner: {
+    backgroundColor: 'white',
+    borderRadius: 22,
+    padding: 3,
+    borderWidth: 3,
+    borderColor: Colors.primary,
+    elevation: 10,
+  },
+  // markerArrow: {
+  //   width: 44,
+  //   height: 44,
+  //   backgroundColor: 'transparent',
+  //   borderRadius: 22,
+  //   borderWidth: 3,
+  //   borderColor: 'white',
+  //   alignSelf: 'center',
+  //   marginTop: -2,
+  // },
+  calloutContainer: {
+    padding: 10,
+    borderRadius: 6,
+    backgroundColor: 'white',
+    minWidth: 150,
+  },
+  calloutTitle: {
+    fontFamily: 'Sora-SemiBold',
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  calloutText: {
+    fontFamily: 'Sora-Regular',
+    fontSize: 12,
+    color: '#666',
   },
 });

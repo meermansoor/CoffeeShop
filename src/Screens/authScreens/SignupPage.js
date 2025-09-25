@@ -5,12 +5,12 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/slices/userSlice'
+import { signUpWithEmailPassword } from '../../firebase/authApi'
 
 const SignupPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [contactNumber, setContactNumber] = useState('')
-  const [address, setAddress] = useState('')
+  const [contactNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -19,8 +19,8 @@ const SignupPage = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
-  const handleSignup = () => {
-    if (!name.trim() || !email.trim() || !contactNumber.trim() || !address.trim() || !password.trim() || !confirmPassword.trim()) {
+  const handleSignup = async () => {
+    if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       Alert.alert('Error', 'Please fill in all fields')
       return
     }
@@ -40,14 +40,21 @@ const SignupPage = () => {
       return
     }
 
-    dispatch(login({
-      name: name,
-      contactNumber: contactNumber,
-      email: email,
-      address: address
-    }))
-    
-    navigation.replace('BottomTab')
+    try {
+      const auth = await signUpWithEmailPassword({ email, password, name, contactNumber: '', address: { line1: '', line2: '', city: '', state: '', postalCode: '', country: '' } })
+      dispatch(login({
+        name: name,
+        contactNumber: '',
+        email: auth.email,
+        address: { line1: '', line2: '', city: '', state: '', postalCode: '', country: '' },
+        uid: auth.uid,
+        idToken: auth.idToken,
+        refreshToken: auth.refreshToken,
+      }))
+      navigation.replace('CompleteProfile')
+    } catch (e) {
+      Alert.alert('Signup failed', String(e?.message || e))
+    }
   }
 
   return (
@@ -80,30 +87,7 @@ const SignupPage = () => {
           />
         </View>
 
-        <View style={styles.inputContainer}>
-          <FontAwesome6 name="phone" size={20} color={Colors.gray} />
-          <TextInput 
-            style={styles.input}
-            placeholder='Contact Number'
-            value={contactNumber}
-            onChangeText={setContactNumber}
-            placeholderTextColor="#666"
-            keyboardType="phone-pad"
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <FontAwesome6 name="location-dot" size={20} color={Colors.gray} />
-          <TextInput 
-            style={styles.input}
-            placeholder='Address'
-            value={address}
-            onChangeText={setAddress}
-            placeholderTextColor="#666"
-            multiline
-            numberOfLines={2}
-          />
-        </View>
+        
 
         <View style={styles.inputContainer}>
           <FontAwesome6 name="lock" size={20} color={Colors.gray} />
@@ -213,6 +197,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontFamily: 'Sora-Regular',
     fontSize: 16,
+    color: '#666',
   },
   signupButton:{
     width:'100%',

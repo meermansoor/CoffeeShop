@@ -14,18 +14,23 @@ import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcon
 import Colors from '../assets/Colors/colors';
 import { useEffect, useState } from 'react';
 import ProductTile from '../assets/components/ProductDisplayTile';
+import FilterModal from '../assets/components/FilterModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/slices/userSlice';
 import { useNavigation } from '@react-navigation/native';
+
+
 
 const { width, height } = Dimensions.get('window');
 const FIRST_BOX_HEIGHT = height * 0.3;
 const SECOND_BOX_TOP = FIRST_BOX_HEIGHT;
 
 function HomePage() {
-  // const [products, setProducts] = useState();
+  const [products, setProducts] = useState();
   const [selectedCategory, setSelectedCategory] = useState('1');
   const [searchText, setSearchText] = useState('');
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [filters, setFilters] = useState({ minPrice: null, maxPrice: null, minRating: null, targetRating: null });
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
   const navigation = useNavigation();
@@ -37,117 +42,114 @@ function HomePage() {
   }, [user.isLoggedIn, navigation]);
 
 
+  const fetchProducts = async () => {
+    const response = await fetch('https://<your-database-name>.firebaseio.com/products.json');
+    const data = await response.json();
+    setProducts(data);
+  };
 
-  // useEffect(() => {
-  //   fetch('https://<your-database-name>.firebaseio.com/products.json')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       const loadedProducts = Object.keys(data).map((key) => ({
-  //         id: key,
-  //         ...data[key],
-  //       }));
-  //       setProducts(loadedProducts);
-  //     })
-  //     .catch((error) => console.error('Error fetching products:', error));
-  // }, []);
-  const products = [
-    {
-      id: '1',
-      name: 'Caffe Mocha',
-      description: 'Deep Foam',
-      price: 4.53,
-      rating: 4.8,
-      category: 'Coffee',
-    },
-    {
-      id: '2',
-      name: 'Flat White',
-      description: 'Espresso',
-      price: 3.53,
-      rating: 4.8,
-      category: 'Coffee',
-    },
-    {
-      id: '3',
-      name: 'Mocha Fusi',
-      description: 'Ice/Hot',
-      price: 7.53,
-      rating: 4.8,
-      category: 'Coffee',
-    },
-    {
-      id: '4',
-      name: 'Caffe Panna',
-      description: 'Ice/Hot',
-      price: 5.53,
-      rating: 4.9,
-      category: 'Coffee',
-    },
-    {
-      id: '5',
-      name: 'Green Tea',
-      description: 'Refreshing',
-      price: 2.99,
-      rating: 4.5,
-      category: 'Tea',
-    },
-    {
-      id: '6',
-      name: 'Earl Grey',
-      description: 'Classic Blend',
-      price: 3.25,
-      rating: 4.7,
-      category: 'Tea',
-    },
-    {
-      id: '7',
-      name: 'Orange Juice',
-      description: 'Fresh Squeezed',
-      price: 4.99,
-      rating: 4.6,
-      category: 'Juice',
-    },
-    {
-      id: '8',
-      name: 'Chocolate Cake',
-      description: 'Rich & Moist',
-      price: 6.99,
-      rating: 4.9,
-      category: 'Cake',
-    },
-    {
-      id: '9',
-      name: 'Vanilla Ice Cream',
-      description: 'Creamy Delight',
-      price: 3.99,
-      rating: 4.4,
-      category: 'Ice Cream',
-    },
-    {
-      id: '10',
-      name: 'Americano',
-      description: 'Strong & Bold',
-      price: 3.99,
-      rating: 4.6,
-      category: 'Coffee',
-    },
-    {
-      id: '11',
-      name: 'Cappuccino',
-      description: 'Perfect Balance',
-      price: 4.25,
-      rating: 4.7,
-      category: 'Coffee',
-    },
-    {
-      id: '12',
-      name: 'Chamomile Tea',
-      description: 'Calming Herbs',
-      price: 2.75,
-      rating: 4.3,
-      category: 'Tea',
-    },
-  ];
+  useEffect(() => {
+    fetchProducts();
+  }, [ products ]);
+
+  // const products = [
+  //   {
+  //     id: '1',
+  //     name: 'Caffe Mocha',
+  //     description: 'Deep Foam',
+  //     price: 4.53,
+  //     rating: 4.8,
+  //     category: 'Coffee',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Flat White',
+  //     description: 'Espresso',
+  //     price: 3.53,
+  //     rating: 4.8,
+  //     category: 'Coffee',
+  //   },
+  //   {
+  //     id: '3',
+  //     name: 'Mocha Fusi',
+  //     description: 'Ice/Hot',
+  //     price: 7.53,
+  //     rating: 4.8,
+  //     category: 'Coffee',
+  //   },
+  //   {
+  //     id: '4',
+  //     name: 'Caffe Panna',
+  //     description: 'Ice/Hot',
+  //     price: 5.53,
+  //     rating: 4.9,
+  //     category: 'Coffee',
+  //   },
+  //   {
+  //     id: '5',
+  //     name: 'Green Tea',
+  //     description: 'Refreshing',
+  //     price: 2.99,
+  //     rating: 4.5,
+  //     category: 'Tea',
+  //   },
+  //   {
+  //     id: '6',
+  //     name: 'Earl Grey',
+  //     description: 'Classic Blend',
+  //     price: 3.25,
+  //     rating: 4.7,
+  //     category: 'Tea',
+  //   },
+  //   {
+  //     id: '7',
+  //     name: 'Orange Juice',
+  //     description: 'Fresh Squeezed',
+  //     price: 4.99,
+  //     rating: 4.6,
+  //     category: 'Juice',
+  //   },
+  //   {
+  //     id: '8',
+  //     name: 'Chocolate Cake',
+  //     description: 'Rich & Moist',
+  //     price: 6.99,
+  //     rating: 4.9,
+  //     category: 'Cake',
+  //   },
+  //   {
+  //     id: '9',
+  //     name: 'Vanilla Ice Cream',
+  //     description: 'Creamy Delight',
+  //     price: 3.99,
+  //     rating: 4.4,
+  //     category: 'Ice Cream',
+  //   },
+  //   {
+  //     id: '10',
+  //     name: 'Americano',
+  //     description: 'Strong & Bold',
+  //     price: 3.99,
+  //     rating: 4.6,
+  //     category: 'Coffee',
+  //   },
+  //   {
+  //     id: '11',
+  //     name: 'Cappuccino',
+  //     description: 'Perfect Balance',
+  //     price: 4.25,
+  //     rating: 4.7,
+  //     category: 'Coffee',
+  //   },
+  //   {
+  //     id: '12',
+  //     name: 'Chamomile Tea',
+  //     description: 'Calming Herbs',
+  //     price: 2.75,
+  //     rating: 4.3,
+  //     category: 'Tea',
+  //   },
+  // ];
 
   const getCategoryName = (categoryId) => {
     const categoryMap = {
@@ -165,8 +167,26 @@ function HomePage() {
     const matchesSearch = searchText.trim() === '' || 
       product.name.toLowerCase().includes(searchText.toLowerCase()) ||
       product.description.toLowerCase().includes(searchText.toLowerCase());
+    const matchesPriceMin =
+      filters.minPrice === null || typeof filters.minPrice !== 'number'
+        ? true
+        : product.price >= filters.minPrice;
+    const matchesPriceMax =
+      filters.maxPrice === null || typeof filters.maxPrice !== 'number'
+        ? true
+        : product.price <= filters.maxPrice;
+    const matchesRating =
+      filters.minRating === null || typeof filters.minRating !== 'number'
+        ? true
+        : product.rating >= filters.minRating;
     
-    return matchesCategory && matchesSearch;
+    return matchesCategory && matchesSearch && matchesPriceMin && matchesPriceMax && matchesRating;
+  })
+  .sort((a, b) => {
+    if (typeof filters.targetRating !== 'number') return 0;
+    const da = Math.abs((a.rating || 0) - filters.targetRating);
+    const db = Math.abs((b.rating || 0) - filters.targetRating);
+    return da - db;
   });
 
 
@@ -216,7 +236,7 @@ function HomePage() {
             </TouchableOpacity>
           </View>
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>{user.name || 'Guest'}</Text>
+            <Text style={styles.userName}>{user.name}</Text>
             <TouchableOpacity 
               style={styles.logoutButton}
               onPress={() => dispatch(logout())}
@@ -245,7 +265,7 @@ function HomePage() {
           </View>
           <TouchableOpacity
             style={styles.filterButton}
-            onPress={() => console.log('hello motherfuckers')}
+            onPress={() => setIsFilterVisible(true)}
           >
             <MaterialDesignIcons name="tune-variant" size={24} color="#D8D8D8" />
           </TouchableOpacity>
@@ -307,6 +327,15 @@ function HomePage() {
           )}
         </View>
       </View>
+      <FilterModal
+        visible={isFilterVisible}
+        onClose={() => setIsFilterVisible(false)}
+        filters={filters}
+        onApply={(next) => {
+          setFilters(next);
+          setIsFilterVisible(false);
+        }}
+      />
     </ScrollView>
   );
 }
@@ -363,7 +392,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    zIndex: 1, // Ensure content is above background
+    zIndex: 1, 
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -407,7 +436,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    zIndex: 1, // Ensure content is above background
+    zIndex: 1, 
   },
   filterButton: {
     height: 52,
@@ -439,7 +468,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginTop: 10,
     marginHorizontal: 20,
-    zIndex: 1, // Ensure content is above background
+    zIndex: 1, 
   },
   promoImage: {
     width: '100%',
@@ -451,7 +480,7 @@ const styles = StyleSheet.create({
   categoryContainer: {
     marginTop: 10,
     marginHorizontal: 30,
-    zIndex: 1, // Ensure content is above background
+    zIndex: 1, 
   },
   categoryItem: {
     alignItems: 'center',
@@ -502,7 +531,7 @@ const styles = StyleSheet.create({
     minHeight: 400,
     paddingHorizontal: 20,
     paddingBottom: 20,
-    zIndex: 1, // Ensure content is above background
+    zIndex: 1,  
   },
   scrollView: {
     flex: 1,

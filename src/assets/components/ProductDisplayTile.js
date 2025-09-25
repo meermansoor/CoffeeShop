@@ -12,6 +12,7 @@ export default function ProductTile({
   price,
   rating,
   id,
+  imageURL,
 }) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -26,7 +27,6 @@ export default function ProductTile({
 
   const addButtonPress = () => {
     dispatch(addToCart({ id,  name , description, price, rating, }));
-    Alert.alert('Item added to cart')
   };
 
   return (

@@ -5,6 +5,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/slices/userSlice'
+import { signInWithEmailPassword } from '../../firebase/authApi'
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -13,23 +14,29 @@ const LoginPage = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
       Alert.alert('Error', 'Please fill in all fields')
       return
     }
 
-    if (email.includes('@') && password.length >= 6) {
+    try {
+      const auth = await signInWithEmailPassword({ email, password })
+      const name = auth?.profile?.name || auth.email?.split('@')[0] || ''
+      const contactNumber = auth?.profile?.contactNumber || ''
+      const address = auth?.profile?.address || { line1: '', line2: '', city: '', state: '', postalCode: '', country: '' }
       dispatch(login({
-        name: 'Meer',
-        contactNumber: '+923023456789',
-        email: email,
-        address: '123 Meer Street, Meer City'
+        name,
+        contactNumber,
+        email: auth.email,
+        address,
+        uid: auth.uid,
+        idToken: auth.idToken,
+        refreshToken: auth.refreshToken,
       }))
-      
       navigation.replace('BottomTab')
-    } else {
-      Alert.alert('Error', 'Please enter a valid email and password (min 6 characters)')
+    } catch (e) {
+      Alert.alert('Login failed', String(e?.message || e))
     }
   }
 

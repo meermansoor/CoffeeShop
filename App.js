@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Provider } from 'react-redux';
+import { Provider} from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 
 import OnboardingScreen from './src/Screens/OnboardingScreen';
@@ -15,14 +15,16 @@ import FavourtiesScreen from './src/Screens/BottomTabs/FavouritesScreen';
 import MapScreen from './src/Screens/MapScreen';
 import LoginPage from './src/Screens/authScreens/loginPage';
 import SignupPage from './src/Screens/authScreens/SignupPage';
+import CompleteProfile from './src/Screens/CompleteProfile';
 
 import Heart from './src/assets/images/svg/Heart.svg';
 import Notification from './src/assets/images/svg/Notification.svg';
 import HomeIcon from './src/assets/images/svg/HomeIcon';
-import BagIcon from './src/assets/images/svg/BagIcon';
+import BagIcon from './src/assets/images/svg/BagIcon';      
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
+
 
 function BottomTabNav() {
   return (
@@ -103,7 +105,7 @@ export default function App() {
     <Provider store={coffeeStore}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Onboard"
+          initialRouteName='BottomTab'
           navigationBar={false}
           screenOptions={{
             headerShown: false,
@@ -116,6 +118,7 @@ export default function App() {
           <Stack.Screen name="MapScreen" component={MapScreen} />
           <Stack.Screen name="LoginPage" component={LoginPage} />
           <Stack.Screen name="SignupPage" component={SignupPage} />
+          <Stack.Screen name="CompleteProfile" component={CompleteProfile} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
