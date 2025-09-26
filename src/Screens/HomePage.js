@@ -26,7 +26,7 @@ const FIRST_BOX_HEIGHT = height * 0.3;
 const SECOND_BOX_TOP = FIRST_BOX_HEIGHT;
 
 function HomePage() {
-  const [products, setProducts] = useState();
+  const [productsData, setProducts] = useState();
   const [selectedCategory, setSelectedCategory] = useState('1');
   const [searchText, setSearchText] = useState('');
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -43,113 +43,113 @@ function HomePage() {
 
 
   const fetchProducts = async () => {
-    const response = await fetch('https://<your-database-name>.firebaseio.com/products.json');
+    const response = await fetch('https://coffeeshop-40de7-default-rtdb.firebaseio.com/products.json');
     const data = await response.json();
     setProducts(data);
   };
 
   useEffect(() => {
     fetchProducts();
-  }, [ products ]);
+  }, [productsData]);
 
-  // const products = [
-  //   {
-  //     id: '1',
-  //     name: 'Caffe Mocha',
-  //     description: 'Deep Foam',
-  //     price: 4.53,
-  //     rating: 4.8,
-  //     category: 'Coffee',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Flat White',
-  //     description: 'Espresso',
-  //     price: 3.53,
-  //     rating: 4.8,
-  //     category: 'Coffee',
-  //   },
-  //   {
-  //     id: '3',
-  //     name: 'Mocha Fusi',
-  //     description: 'Ice/Hot',
-  //     price: 7.53,
-  //     rating: 4.8,
-  //     category: 'Coffee',
-  //   },
-  //   {
-  //     id: '4',
-  //     name: 'Caffe Panna',
-  //     description: 'Ice/Hot',
-  //     price: 5.53,
-  //     rating: 4.9,
-  //     category: 'Coffee',
-  //   },
-  //   {
-  //     id: '5',
-  //     name: 'Green Tea',
-  //     description: 'Refreshing',
-  //     price: 2.99,
-  //     rating: 4.5,
-  //     category: 'Tea',
-  //   },
-  //   {
-  //     id: '6',
-  //     name: 'Earl Grey',
-  //     description: 'Classic Blend',
-  //     price: 3.25,
-  //     rating: 4.7,
-  //     category: 'Tea',
-  //   },
-  //   {
-  //     id: '7',
-  //     name: 'Orange Juice',
-  //     description: 'Fresh Squeezed',
-  //     price: 4.99,
-  //     rating: 4.6,
-  //     category: 'Juice',
-  //   },
-  //   {
-  //     id: '8',
-  //     name: 'Chocolate Cake',
-  //     description: 'Rich & Moist',
-  //     price: 6.99,
-  //     rating: 4.9,
-  //     category: 'Cake',
-  //   },
-  //   {
-  //     id: '9',
-  //     name: 'Vanilla Ice Cream',
-  //     description: 'Creamy Delight',
-  //     price: 3.99,
-  //     rating: 4.4,
-  //     category: 'Ice Cream',
-  //   },
-  //   {
-  //     id: '10',
-  //     name: 'Americano',
-  //     description: 'Strong & Bold',
-  //     price: 3.99,
-  //     rating: 4.6,
-  //     category: 'Coffee',
-  //   },
-  //   {
-  //     id: '11',
-  //     name: 'Cappuccino',
-  //     description: 'Perfect Balance',
-  //     price: 4.25,
-  //     rating: 4.7,
-  //     category: 'Coffee',
-  //   },
-  //   {
-  //     id: '12',
-  //     name: 'Chamomile Tea',
-  //     description: 'Calming Herbs',
-  //     price: 2.75,
-  //     rating: 4.3,
-  //     category: 'Tea',
-  //   },
-  // ];
+  const products = [
+    {
+      id: '1',
+      name: 'Caffe Mocha',
+      description: 'Deep Foam',
+      price: 4.53,
+      rating: 4.8,
+      category: 'Coffee',
+    },
+    {
+      id: '2',
+      name: 'Flat White',
+      description: 'Espresso',
+      price: 3.53,
+      rating: 4.8,
+      category: 'Coffee',
+    },
+    {
+      id: '3',
+      name: 'Mocha Fusi',
+      description: 'Ice/Hot',
+      price: 7.53,
+      rating: 4.8,
+      category: 'Coffee',
+    },
+    {
+      id: '4',
+      name: 'Caffe Panna',
+      description: 'Ice/Hot',
+      price: 5.53,
+      rating: 4.9,
+      category: 'Coffee',
+    },
+    {
+      id: '5',
+      name: 'Green Tea',
+      description: 'Refreshing',
+      price: 2.99,
+      rating: 4.5,
+      category: 'Tea',
+    },
+    {
+      id: '6',
+      name: 'Earl Grey',
+      description: 'Classic Blend',
+      price: 3.25,
+      rating: 4.7,
+      category: 'Tea',
+    },
+    {
+      id: '7',
+      name: 'Orange Juice',
+      description: 'Fresh Squeezed',
+      price: 4.99,
+      rating: 4.6,
+      category: 'Juice',
+    },
+    {
+      id: '8',
+      name: 'Chocolate Cake',
+      description: 'Rich & Moist',
+      price: 6.99,
+      rating: 4.9,
+      category: 'Cake',
+    },
+    {
+      id: '9',
+      name: 'Vanilla Ice Cream',
+      description: 'Creamy Delight',
+      price: 3.99,
+      rating: 4.4,
+      category: 'Ice Cream',
+    },
+    {
+      id: '10',
+      name: 'Americano',
+      description: 'Strong & Bold',
+      price: 3.99,
+      rating: 4.6,
+      category: 'Coffee',
+    },
+    {
+      id: '11',
+      name: 'Cappuccino',
+      description: 'Perfect Balance',
+      price: 4.25,
+      rating: 4.7,
+      category: 'Coffee',
+    },
+    {
+      id: '12',
+      name: 'Chamomile Tea',
+      description: 'Calming Herbs',
+      price: 2.75,
+      rating: 4.3,
+      category: 'Tea',
+    },
+  ];
 
   const getCategoryName = (categoryId) => {
     const categoryMap = {

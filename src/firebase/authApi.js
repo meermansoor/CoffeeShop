@@ -1,4 +1,9 @@
-import { FIREBASE_SIGNIN, FIREBASE_SIGNUP, FIREBASE_ACCOUNT_INFO, jsonPost, FIREBASE_DB_URL } from './firebaseConfig';
+import { FIREBASE_SIGNIN, FIREBASE_SIGNUP, jsonPost, FIREBASE_DB_URL } from './firebaseConfig';
+import {AsyncStorage} from 'react-native';
+
+const getToken = async () => {
+  return await AsyncStorage.getItem('token');
+}
 
 export async function signUpWithEmailPassword({ email, password, name, contactNumber, address }) {
   const signup = await jsonPost(FIREBASE_SIGNUP, {

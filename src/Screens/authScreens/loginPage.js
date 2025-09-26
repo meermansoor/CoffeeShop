@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontFamily: 'Sora-Regular',
     fontSize: 16,
+    color: Colors.dark,
   },
   forgotPassword: {
     fontSize: 14,
