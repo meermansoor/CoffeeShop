@@ -16,11 +16,11 @@ export default function CartItemTile({
 
     const dispatch = useDispatch();
 
-    const increaseQuantity = () => {
+    const addToCart = () => {
       dispatch(incrementQuantity(name));
     };
     
-    const decreaseQuantity = () => {
+    const removeFromCart = () => {
       dispatch(decrementQuantity(name));
     };
     
@@ -36,11 +36,11 @@ export default function CartItemTile({
             <Text style={styles.subText}>{description}</Text>
           </View>
           <View style={styles.quantityContainer}>
-            <TouchableOpacity style={styles.icon} onPress={decreaseQuantity}>
+            <TouchableOpacity style={styles.icon} onPress={removeFromCart}>
               <AntDesign name='minus' size={18}/>
             </TouchableOpacity>
             <Text style={styles.quantityText}>{quantity}</Text>
-            <TouchableOpacity style={styles.icon} onPress={increaseQuantity}>
+            <TouchableOpacity style={styles.icon} onPress={addToCart}>
             <AntDesign name='plus' size={16} color={'black'} />
             </TouchableOpacity>
           </View>

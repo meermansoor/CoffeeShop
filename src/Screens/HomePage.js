@@ -309,11 +309,7 @@ function HomePage() {
               data={filteredProducts}
               keyExtractor={item => item.id}
               numColumns={2}
-              columnWrapperStyle={{
-                gap: 10,
-                marginBottom: 10,
-                marginHorizontal:10,
-              }}
+              columnWrapperStyle={styles.ListWrapper}
               renderItem={({ item }) => (
                 <ProductTile
                   id={item.id}
@@ -541,6 +537,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     position: 'relative',
     zIndex: 1,
+  },
+  ListWrapper: {
+    gap: 10,
+    marginBottom: 10,
+    marginHorizontal:10,
   },
 
 });

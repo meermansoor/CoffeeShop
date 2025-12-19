@@ -1,35 +1,43 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import Colors from '../Colors/colors'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Colors from '../Colors/colors';
 
 const FilterModal = ({ visible, onClose, filters, onApply }) => {
-  const [minPrice, setMinPrice] = useState('')
-  const [maxPrice, setMaxPrice] = useState('')
-  const [minRating, setMinRating] = useState('')
-  const [targetRating, setTargetRating] = useState(null)
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [minRating, setMinRating] = useState('');
+  const [targetRating, setTargetRating] = useState(null);
 
   useEffect(() => {
-    if (!visible) return
+    if (!visible) return;
     setMinPrice(
       filters?.minPrice !== null && filters?.minPrice !== undefined
         ? String(filters.minPrice)
-        : ''
-    )
+        : '',
+    );
     setMaxPrice(
       filters?.maxPrice !== null && filters?.maxPrice !== undefined
         ? String(filters.maxPrice)
-        : ''
-    )
+        : '',
+    );
     setMinRating(
       filters?.minRating !== null && filters?.minRating !== undefined
         ? String(filters.minRating)
-        : ''
-    )
+        : '',
+    );
     setTargetRating(
-      typeof filters?.targetRating === 'number' ? filters.targetRating : null
-    )
-  }, [visible, filters])
+      typeof filters?.targetRating === 'number' ? filters.targetRating : null,
+    );
+  }, [visible, filters]);
 
   const handleApply = () => {
     const next = {
@@ -37,16 +45,16 @@ const FilterModal = ({ visible, onClose, filters, onApply }) => {
       maxPrice: maxPrice.trim() === '' ? null : Number(maxPrice),
       minRating: minRating.trim() === '' ? null : Number(minRating),
       targetRating: typeof targetRating === 'number' ? targetRating : null,
-    }
-    onApply?.(next)
-  }
+    };
+    onApply?.(next);
+  };
 
   const handleReset = () => {
-    setMinPrice('')
-    setMaxPrice('')
-    setMinRating('')
-    onApply?.({ minPrice: null, maxPrice: null, minRating: null })
-  }
+    setMinPrice('');
+    setMaxPrice('');
+    setMinRating('');
+    onApply?.({ minPrice: null, maxPrice: null, minRating: null });
+  };
 
   return (
     <Modal
@@ -57,7 +65,13 @@ const FilterModal = ({ visible, onClose, filters, onApply }) => {
     >
       <View style={styles.backdrop}>
         <View style={styles.card}>
-          <Text style={styles.title}>Filters</Text>
+          <View style={styles.titleBar}>
+            <Text style={styles.title}>Filters</Text>
+
+            <TouchableOpacity style={styles.closeArea} onPress={onClose}>
+              <Entypo name="circle-with-cross" size={24} color="#999" />
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Price range</Text>
@@ -97,10 +111,15 @@ const FilterModal = ({ visible, onClose, filters, onApply }) => {
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Pick rating (closest first)</Text>
             <View style={styles.starsRow}>
-              {[1,2,3,4,5].map((value) => (
-                <TouchableOpacity key={value} onPress={() => setTargetRating(value)}>
+              {[1, 2, 3, 4, 5].map(value => (
+                <TouchableOpacity
+                  key={value}
+                  onPress={() => setTargetRating(value)}
+                >
                   <Ionicons
-                    name={(targetRating || 0) >= value ? 'star' : 'star-outline'}
+                    name={
+                      (targetRating || 0) >= value ? 'star' : 'star-outline'
+                    }
                     size={28}
                     color={Colors.primary}
                   />
@@ -113,25 +132,27 @@ const FilterModal = ({ visible, onClose, filters, onApply }) => {
           </View>
 
           <View style={styles.buttonRow}>
-            <TouchableOpacity style={[styles.button, styles.reset]} onPress={handleReset}>
+            <TouchableOpacity
+              style={[styles.button, styles.reset]}
+              onPress={handleReset}
+            >
               <Text style={styles.resetText}>Reset</Text>
             </TouchableOpacity>
             <View style={{ width: 10 }} />
-            <TouchableOpacity style={[styles.button, styles.apply]} onPress={handleApply}>
+            <TouchableOpacity
+              style={[styles.button, styles.apply]}
+              onPress={handleApply}
+            >
               <Text style={styles.applyText}>Apply</Text>
             </TouchableOpacity>
           </View>
-
-          <TouchableOpacity style={styles.closeArea} onPress={onClose}>
-            <Text style={styles.closeText}>Close</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </Modal>
-  )
-}
+  );
+};
 
-export default FilterModal
+export default FilterModal;
 
 const styles = StyleSheet.create({
   backdrop: {
@@ -206,9 +227,11 @@ const styles = StyleSheet.create({
     color: '#111',
     fontFamily: 'Sora-SemiBold',
   },
-  closeArea: {
-    marginTop: 10,
+  titleBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 12,
   },
   closeText: {
     color: '#999',
@@ -225,4 +248,4 @@ const styles = StyleSheet.create({
     color: '#ddd',
     fontFamily: 'Sora-SemiBold',
   },
-})
+});
