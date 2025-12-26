@@ -1,8 +1,9 @@
+import { View, StyleSheet } from 'react-native';
+import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Provider} from 'react-redux';
-import { View, StyleSheet } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 import OnboardingScreen from './src/Screens/OnboardingScreen';
 import HomePage from './src/Screens/HomePage';
@@ -20,11 +21,12 @@ import CompleteProfile from './src/Screens/CompleteProfile';
 import Heart from './src/assets/images/svg/Heart.svg';
 import Notification from './src/assets/images/svg/Notification.svg';
 import HomeIcon from './src/assets/images/svg/HomeIcon';
-import BagIcon from './src/assets/images/svg/BagIcon';      
+import BagIcon from './src/assets/images/svg/BagIcon';
+import AddedToCartToast from './src/assets/components/Toasts/AddToCartToast';
+import { add } from 'react-native/types_generated/Libraries/Animated/AnimatedExports';
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
-
 
 function BottomTabNav() {
   return (
@@ -82,7 +84,7 @@ function BottomTabNav() {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
-            <Heart fill={focused ? Colors.primary : Colors.gray}/>
+            <Heart fill={focused ? Colors.primary : Colors.gray} />
           ),
         }}
       />
@@ -91,9 +93,7 @@ function BottomTabNav() {
         component={NotificationScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: () => (
-            <Notification />
-          ),
+          tabBarIcon: () => <Notification />,
         }}
       />
     </BottomTab.Navigator>
@@ -105,7 +105,7 @@ export default function App() {
     <Provider store={coffeeStore}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName='BottomTab'
+          initialRouteName="BottomTab"
           navigationBar={false}
           screenOptions={{
             headerShown: false,
@@ -114,13 +114,20 @@ export default function App() {
           <Stack.Screen name="BottomTab" component={BottomTabNav} />
           <Stack.Screen name="DetailScreen" component={DetailScreen} />
           <Stack.Screen name="Onboard" component={OnboardingScreen} />
-          <Stack.Screen name="OrderScreen" component={OrderScreen} /> 
+          <Stack.Screen name="OrderScreen" component={OrderScreen} />
           <Stack.Screen name="MapScreen" component={MapScreen} />
           <Stack.Screen name="LoginPage" component={LoginPage} />
           <Stack.Screen name="SignupPage" component={SignupPage} />
           <Stack.Screen name="CompleteProfile" component={CompleteProfile} />
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast
+        config={{
+          addedToCart: ({ text1, text2, ...rest }) => (
+            <AddedToCartToast text1={text1} text2={text2} {...rest} />
+          ),
+        }}
+      />
     </Provider>
   );
 }

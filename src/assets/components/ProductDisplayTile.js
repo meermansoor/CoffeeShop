@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Colors from '../Colors/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/slices/cartSlice';
+import Toast from 'react-native-toast-message';
 
 
 export default function ProductTile({
@@ -12,21 +13,28 @@ export default function ProductTile({
   price,
   rating,
   id,
-  imageURL,
+  imageURL
 }) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  // Debug logging
-  console.log('ProductTile - Received props:', { id, name, description, price, rating });
-
   const ProductTilePress = () => {
-    console.log('ProductTile - Navigating to DetailScreen with:', { id, name, description, price, rating });
     navigation.navigate('DetailScreen', { id: id, name: name, description: description, price: price, rating: rating });
   };
 
+  const image ='https://res.cloudinary.com/doawcr6a6/image/upload/v1754343003/pimage_eklsfd.jpg'
+
   const addButtonPress = () => {
     dispatch(addToCart({ id,  name , description, price, rating, }));
+    Toast.show({
+      type: 'addedToCart', // matches config key
+      text1: 'Added to Cart',
+      text2: `${name} has been added to your cart.`,
+      position: 'top',
+      visibilityTime: 3000,
+      topOffset: 10,
+      swipeable: true,
+    });
+    
   };
 
   return (

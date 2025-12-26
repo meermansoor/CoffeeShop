@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  name: '',
+  name: 'Default',
   contactNumber: '',
   email: '',
   address: {
@@ -15,7 +15,7 @@ const initialState = {
   uid: '',
   idToken: '',
   refreshToken: '',
-  isLoggedIn: false,
+  isLoggedIn: true,
 };
 
 const userSlice = createSlice({

@@ -9,15 +9,16 @@ import {
   ScrollView,
   Dimensions
 } from 'react-native';
+import { useEffect, useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Colors from '../assets/Colors/colors';
-import { useEffect, useState } from 'react';
 import ProductTile from '../assets/components/ProductDisplayTile';
 import FilterModal from '../assets/components/FilterModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/slices/userSlice';
 import { useNavigation } from '@react-navigation/native';
+import AlertModal from '../assets/components/AlertModal';
 
 
 
@@ -31,6 +32,7 @@ function HomePage() {
   const [searchText, setSearchText] = useState('');
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [filters, setFilters] = useState({ minPrice: null, maxPrice: null, minRating: null, targetRating: null });
+  const [showAlert, setShowAlert] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
   const navigation = useNavigation();
@@ -332,6 +334,10 @@ function HomePage() {
           setIsFilterVisible(false);
         }}
       />
+      <AlertModal
+        visible ={showAlert}
+        onClose={() => setShowAlert(false)}
+      />
     </ScrollView>
   );
 }
@@ -345,33 +351,33 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: -2, // Lower z-index to ensure it's behind everything
+    zIndex: -2, 
   },
   FirstBox: {
     backgroundColor: Colors.dark,
-    height: FIRST_BOX_HEIGHT, // Fixed pixel height instead of percentage
+    height: FIRST_BOX_HEIGHT, 
     width: '100%',
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    zIndex: -1, // Higher than background but lower than content
+    zIndex: -1, 
   },
   SecondBox: {
     backgroundColor: Colors.background,
-    height: height - FIRST_BOX_HEIGHT, // Cover remaining height
+    height: height - FIRST_BOX_HEIGHT, 
     width: '100%',
     position: 'absolute',
-    top: SECOND_BOX_TOP, // Fixed top position based on FirstBox height
+    top: SECOND_BOX_TOP, 
     left: 0,
     right: 0,
-    zIndex: -1, // Higher than background but lower than content
+    zIndex: -1, 
   },
   container: {
     flex: 1,
     minHeight: '100%',
     position: 'relative',
-    height: '100%', // Fixed height to prevent changes
+    height: '100%', 
   },
   title: {
     fontSize: 24,
