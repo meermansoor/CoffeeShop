@@ -21,12 +21,6 @@ export default function DetailScreen() {
 
   const isFavourite = favouriteItems.some(item => item.id === product.id);
 
-  
-  useEffect(() => {
-    console.log('DetailScreen - Product ID:', product.id);
-    console.log('DetailScreen - Favourite items:', favouriteItems);
-    console.log('DetailScreen - Is favourite:', isFavourite);
-  }, [product.id, favouriteItems, isFavourite]);
 
   const toggleExpanded = () => setExpanded(!expanded);
 
@@ -34,36 +28,7 @@ export default function DetailScreen() {
   const longDescription =
     'This is a luxurious blend crafted from premium Arabica beans, delicately roasted and paired with creamy milk and deep chocolate or espresso tones. It’s an ideal choice whether you enjoy it hot or iced. Perfect for cozy mornings, afternoon pick-me-ups, or evening relaxation. Sip and savor the rich notes with every cup.';
 
-  const products = [
-    {
-      id: '1',
-      name: 'Caffe Mocha',
-      description: 'Deep Foam',
-      price: 4.53,
-      rating: 4.8,
-    },
-    {
-      id: '2',
-      name: 'Flat White',
-      description: 'Espresso',
-      price: 3.53,
-      rating: 4.8,
-    },
-    {
-      id: '3',
-      name: 'Mocha Fusi',
-      description: 'Ice/Hot',
-      price: 7.53,
-      rating: 4.8,
-    },
-    {
-      id: '4',
-      name: 'Caffe Panna',
-      description: 'Ice/Hot',
-      price: 5.53,
-      rating: 4.9,
-    },
-  ];
+
 
   const buyButtonHandler= () => {
     const productWithSize = {

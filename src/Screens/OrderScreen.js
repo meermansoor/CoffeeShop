@@ -117,6 +117,7 @@ export default function OrderScreen() {
       </View>
       <View>
         <FlatList
+          scrollEnabled={false}
           data={cartItems}
           keyExtractor={item => item.id + '_' + item.name}
           renderItem={cartItemRenderHandler}

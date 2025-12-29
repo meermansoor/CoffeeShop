@@ -48,7 +48,7 @@ export default function ProductTile({
           <Text style={styles.rating}>{rating}</Text>
         </View>
         <Image
-          source={{uri: 'https://res.cloudinary.com/doawcr6a6/image/upload/v1754343003/pimage_eklsfd.jpg'}}
+          source={{uri: imageURL}}
           style={styles.image}
         />
       </View>

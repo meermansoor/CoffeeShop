@@ -4,11 +4,14 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Button,
 } from 'react-native';
 import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+
+
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import ProductTile from '../../assets/components/ProductDisplayTile';
 
@@ -16,13 +19,19 @@ const FavouritesScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const favouriteItems = useSelector(state => state.favourites.favouriteItems);
-
-  // Debug logging
+  
   useEffect(() => {
     console.log('FavouritesScreen - Total favourites:', favouriteItems.length);
     console.log('FavouritesScreen - Favourite items:', favouriteItems);
   }, [favouriteItems]);
 
+
+
+  favouriteItems.forEach(item => console.log('Image URL:', item.imageURL));
+
+
+
+  
   const renderFavouriteItem = ({ item }) => (
     <ProductTile
       id={item.id}
@@ -30,6 +39,7 @@ const FavouritesScreen = () => {
       description={item.description}
       price={item.price}
       rating={item.rating}
+      imageURL={item.imageURL}
     />
   );
 
@@ -57,11 +67,12 @@ const FavouritesScreen = () => {
           keyExtractor={(item) => item.id + '_' + item.name}
           numColumns={2}
           columnWrapperStyle={styles.rowContainer}
-          renderItem={renderFavouriteItem}
+          renderItem={renderFavouriteItem}r
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
         />
       )}
+
     </View>
   );
 };
