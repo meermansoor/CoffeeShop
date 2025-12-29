@@ -17,7 +17,7 @@ const getCurrentLocation = () => {
         {
           enableHighAccuracy: false,
           timeout: 20000,
-          maximumAge: 0 ,
+          maximumAge: 10000 ,
         }
       );
     });
@@ -29,7 +29,7 @@ const getCurrentLocation = () => {
     try {
       // Replace with your Mapbox access token
       const MAPBOX_ACCESS_TOKEN =
-        'pk.eyJ1IjoibmF6YXItMDA3IiwiYSI6ImNsejYyY2ticzA3aGUyanF1NDcyb3B5a2kifQ.okzZFzu0flrHiLQ2E326lQ';
+        'sk.eyJ1IjoibWVlcm1hbnNvb3IiLCJhIjoiY21qbXo5NHR6MHE4cjNlcGl5em83a3hxMCJ9.GLESsNqso0uAiei07DeK5A';
 
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_ACCESS_TOKEN}&types=place,locality,neighborhood,address`,
