@@ -8,7 +8,7 @@ const initialState = {
     line1: '',
     line2: '',
     city: '',
-    state: '',
+    province: '',
     postalCode: '',
     country: '',
   },
@@ -37,7 +37,7 @@ const userSlice = createSlice({
       state.name = '';
       state.contactNumber = '';
       state.email = '';
-      state.address = { line1: '', line2: '', city: '', state: '', postalCode: '', country: '' };
+      state.address = { line1: '', line2: '', city: '', province: '', postalCode: '', country: '' };
       state.uid = '';
       state.idToken = '';
       state.refreshToken = '';
@@ -50,19 +50,25 @@ const userSlice = createSlice({
       if (email !== undefined) state.email = email;
       if (address !== undefined) state.address = normalizeAddress(address);
     },
+    setAddress: (state, action) => {
+      state.address ={
+        ...state.address, 
+        ...action.payload,
+      }
+    }
   },
 });
 
 function normalizeAddress(address) {
   if (!address) {
-    return { line1: '', line2: '', city: '', state: '', postalCode: '', country: '' };
+    return { line1: '', line2: '', city: '', province: '', postalCode: '', country: '' };
   }
   if (typeof address === 'string') {
-    return { line1: address, line2: '', city: '', state: '', postalCode: '', country: '' };
+    return { line1: address, line2: '', city: '', province: '', postalCode: '', country: '' };
   }
-  const { line1 = '', line2 = '', city = '', state = '', postalCode = '', country = '' } = address;
-  return { line1, line2, city, state, postalCode, country };
+  const { line1 = '', line2 = '', city = '', province = '', postalCode = '', country = '' } = address;
+  return { line1, line2, city, province, postalCode, country };
 }
 
-export const { login, logout, updateProfile } = userSlice.actions;
+export const { login, logout, updateProfile, setAddress } = userSlice.actions;
 export default userSlice.reducer;

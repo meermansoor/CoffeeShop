@@ -16,23 +16,27 @@ import Colors from '../assets/Colors/colors';
 import ProductTile from '../assets/components/ProductDisplayTile';
 import FilterModal from '../assets/components/FilterModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../redux/slices/userSlice';
+import { logout, setAddress } from '../redux/slices/userSlice';
 import {
   getCurrentLocation,
   getAddressFromCoordinates,
 } from '../firebase/GeoCode';
 import { useNavigation } from '@react-navigation/native';
-import AlertModal from '../assets/components/AlertModal';
 import firestore from '@react-native-firebase/firestore';
 import { addProducts } from '../redux/slices/productSlice';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const { width, height } = Dimensions.get('window');
 const FIRST_BOX_HEIGHT = height * 0.3;
 const SECOND_BOX_TOP = FIRST_BOX_HEIGHT;
 
 function HomePage() {
-  const [addressLoc, setAddressLoc] = useState();
+  const [addressLoc, setAddressLoc] = useState({
+    address: '',
+    city: '',
+    province: '',
+    country: '',
+
+  });
   const [productsData, setProductsData] = useState();
   const [selectedCategory, setSelectedCategory] = useState('1');
   const [searchText, setSearchText] = useState('');
@@ -60,14 +64,18 @@ function HomePage() {
         const { latitude, longitude } = await getCurrentLocation();
         const address = await getAddressFromCoordinates(latitude, longitude); // must await
         console.log('Fetched address:', address); // debug
-        setAddressLoc(address); // set state
+        setAddressLoc(address);// set state
+        dispatch(setAddress(address))// redux 
+
+
       } catch (err) {
         console.error(err);
       }
     };
   
     handleGetLocation();
-  }, []);
+  }, [dispatch]);
+
   
   useEffect(() => {
     const fetchProducts = async () => {
@@ -79,6 +87,7 @@ function HomePage() {
         }));
 
         dispatch(addProducts(productsList));
+        setProductsData(productsList);
       } catch (err) {
         console.error('Error fetching products:', err);
       } finally {
@@ -88,7 +97,7 @@ function HomePage() {
     fetchProducts();
   }, [dispatch]);
 
-  const products = useSelector(state => state.product.items) || [];
+  const products = useSelector(state => state.product.items) || productsData;
 
   const getCategoryName = categoryId => {
     const categoryMap = {
@@ -101,8 +110,7 @@ function HomePage() {
     return categoryMap[categoryId] || 'Coffee';
   };
 
-  const filteredProducts = products
-    .filter(product => {
+  const filteredProducts = products.filter(product => {
       const matchesCategory =
         product.category === getCategoryName(selectedCategory);
       const matchesSearch =
@@ -178,7 +186,7 @@ function HomePage() {
           <View style={styles.locationLeft}>
             <Text style={styles.locationText}>Location</Text>
             <TouchableOpacity style={styles.locationButton}>
-              <Text style={styles.locationButtonText}>{addressLoc}</Text>
+              <Text style={styles.locationButtonText}>{addressLoc.address}</Text>
               <Ionicons name="chevron-down" size={20} color="#D8D8D8" />
             </TouchableOpacity>
           </View>
@@ -288,7 +296,6 @@ function HomePage() {
           setIsFilterVisible(false);
         }}
       />
-      <AlertModal visible={showAlert} onClose={() => setShowAlert(false)} />
     </ScrollView>
   );
 }

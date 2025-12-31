@@ -77,7 +77,14 @@ const getCurrentLocation = () => {
           return feature.place_name;
         }
 
-        return addressParts.join(', ');
+        const address = {
+          address: addressParts.join(', '),
+          city: addressParts[0],
+          province: addressParts[1] || '',
+          country: addressParts[addressParts.length - 1] || ''
+        };
+        
+        return address ;
       }
 
       return `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;

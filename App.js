@@ -121,6 +121,8 @@ export default function App() {
           <Stack.Screen name="CompleteProfile" component={CompleteProfile} />
         </Stack.Navigator>
       </NavigationContainer>
+
+
       <Toast
         config={{
           addedToCart: ({ text1, text2, ...rest }) => (

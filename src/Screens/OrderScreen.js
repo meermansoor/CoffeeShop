@@ -16,20 +16,31 @@ import Edit from '../assets/images/svg/Edit.svg';
 import Document from '../assets/images/svg/Document.svg';
 import CartItemTile from '../assets/components/CartItemTile';
 import Discount from '../assets/images/svg/Discount';
+import AddressModal from '../assets/components/AddressModal';
+import AddNote from '../assets/components/AddNoteModal';
 
 export default function OrderScreen() {
+  const [isVisbile, setIsVisible] = useState(false);
+  const [noteModalVisible, setNoteModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsVisible(!isVisbile);
+  };
+
   const [selectedOption, setSelectedOption] = useState('Deliver');
   const cartItems = useSelector(state => state.cart.cartItems);
   const navigation = useNavigation();
 
-  const totalPrice = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity, 
-    0
-  );
-  
-  const deliveryCharges = 2
+  const address = useSelector(state => state.user.address);
 
-  const finalAmount = totalPrice + deliveryCharges
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
+
+  const deliveryCharges = 2.00; // Flat delivery fee
+
+  const finalAmount = totalPrice + deliveryCharges;
 
   function cartItemRenderHandler({ item }) {
     return (
@@ -43,10 +54,18 @@ export default function OrderScreen() {
     );
   }
 
+  const editAddressHandler = () => {
+    return setIsVisible(true);
+  };
+
+  const addNoteHandler = () => {
+    return setNoteModalVisible(!noteModalVisible);
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={()=>navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome6 name="angle-left" color={'black'} size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Order</Text>
@@ -99,21 +118,29 @@ export default function OrderScreen() {
         <Text style={[styles.title, { textAlign: 'auto' }]}>
           Delivery Address
         </Text>
-        <Text style={styles.subText}>JI. Kpg Sutoyo</Text>
+        <Text style={styles.subText}>{address.city}, {address.province} </Text>
         <Text style={styles.addressText}>
-          Kpg. Sutoyo No. 620, Bilzen, Tanjungbalai.
+          {address.line1}, {address.city}, {address.province}.
         </Text>
         <View style={styles.editAddressContainer}>
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={editAddressHandler}
+          >
             <Edit />
             <Text style={styles.editText}>Edit Address</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.editButton}>
+    
+            <AddressModal visible={isVisbile} onClose={toggleModal} />
+        
+          <TouchableOpacity style={styles.editButton} onPress={addNoteHandler}>
             <Document />
             <Text style={styles.editText}>Add Note</Text>
           </TouchableOpacity>
+          <AddNote visible={noteModalVisible} onClose={addNoteHandler} />
         </View>
         <View style={styles.line} />
+
       </View>
       <View>
         <FlatList
@@ -124,15 +151,15 @@ export default function OrderScreen() {
         />
       </View>
       <View style={styles.paymentContainer}>
-      <TouchableOpacity style={styles.discountContainer}>
-        <View style={{ flexDirection: 'row' }}>
-          <Discount />
-          <Text style={styles.discountTxt}> Discount is Applied</Text>
-        </View>
-        <TouchableOpacity>
-          <FontAwesome6 name="angle-right" color={'black'} size={20} />
+        <TouchableOpacity style={styles.discountContainer}>
+          <View style={{ flexDirection: 'row' }}>
+            <Discount />
+            <Text style={styles.discountTxt}> Discount is Applied</Text>
+          </View>
+          <TouchableOpacity>
+            <FontAwesome6 name="angle-right" color={'black'} size={20} />
+          </TouchableOpacity>
         </TouchableOpacity>
-      </TouchableOpacity>
         <Text
           style={[
             styles.title,
@@ -142,32 +169,42 @@ export default function OrderScreen() {
           Payment Summary
         </Text>
         <View style={styles.footer}>
-
-        <View style={styles.priceContainer}>
-          <Text style={styles.price}>Price</Text>
-          <Text style={styles.price}>${totalPrice}</Text>
+          <View style={styles.priceContainer}>
+            <Text style={styles.price}>Price</Text>
+            <Text style={styles.price}>${totalPrice}</Text>
+          </View>
+          <View style={styles.priceContainer}>
+            <Text style={styles.price}>Delivery Fee</Text>
+            <Text style={styles.price}>${deliveryCharges}</Text>
+          </View>
         </View>
-        <View style={styles.priceContainer}>
-          <Text style={styles.price}>Delivery Fee</Text>
-          <Text style={styles.price} >${deliveryCharges}</Text>
-        </View>
-        </View>
-      <TouchableOpacity style={styles.paymentOption}>
-        <View style={{flexDirection:'row', gap:20, justifyContent:'center', alignItems:'center'}}>
-        <FontAwesome6 name='wallet' color={Colors.primary} size={24} />
-        <View>
-        <Text style={styles.paymentText}>Cash/Wallet</Text>
-        <Text style={[styles.paymentText,{color:Colors.primary}]}>{(totalPrice + deliveryCharges).toFixed(2)}</Text>
-        </View>
-        </View>
-        <FontAwesome6 name='angle-down' color={'black'} size={24} />
-
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.orderButton} onPress={()=>{
-        navigation.navigate('MapScreen')
-      }}>
-        <Text style={styles.buttonText}> Order </Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.paymentOption}>
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <FontAwesome6 name="wallet" color={Colors.primary} size={24} />
+            <View>
+              <Text style={styles.paymentText}>Cash/Wallet</Text>
+              <Text style={[styles.paymentText, { color: Colors.primary }]}>
+                {(totalPrice + deliveryCharges).toFixed(2)}
+              </Text>
+            </View>
+          </View>
+          <FontAwesome6 name="angle-down" color={'black'} size={24} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.orderButton}
+          onPress={() => {
+            navigation.navigate('MapScreen');
+          }}
+        >
+          <Text style={styles.buttonText}> Order </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -194,7 +231,7 @@ const styles = StyleSheet.create({
     padding: 4,
     backgroundColor: '#EDEDED',
     marginHorizontal: 20,
-    marginBottom:20,
+    marginBottom: 20,
     borderRadius: 8,
     flexDirection: 'row',
     gap: 10,
@@ -299,59 +336,49 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 10,
     justifyContent: 'space-between',
-    borderWidth:1,
-    borderColor:Colors.lightGray,
-    borderRadius:16,
-    padding:20
+    borderWidth: 1,
+    borderColor: Colors.lightGray,
+    borderRadius: 16,
+    padding: 20,
   },
   discountTxt: {
     fontFamily: 'Sora-SemiBold',
     fontSize: 14,
     marginLeft: 16,
   },
-  priceContainer:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    marginHorizontal:25
+  priceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 25,
   },
-  price:{
-    fontFamily:'Sora-Regular',
+  price: {
+    fontFamily: 'Sora-Regular',
   },
-  paymentContainer:{
-    width:'100%',
-    padding:8,
-    gap:8,
-    // position: "absolute",
-    // bottom:0,
-    alignSelf:'flex-end',
-    zIndex:2,
+  paymentContainer: {
+    width: '100%',
+    padding: 8,
+    gap: 8,
+    alignSelf: 'flex-end',
+    zIndex: 2,
   },
-  paymentOption:{
-    flexDirection:'row',
-    gap:16,
-    marginTop:20,
-    justifyContent:'space-between',
-    alignItems:'center',
-    paddingHorizontal:16,
-
+  paymentOption: {
+    flexDirection: 'row',
+    gap: 16,
+    marginTop: 20,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
   },
-  paymentText:{
-    fontFamily:'Sora-SemiBold',
-    fontSize:14
+  paymentText: {
+    fontFamily: 'Sora-SemiBold',
+    fontSize: 14,
   },
-  orderButton:{
-    backgroundColor:Colors.primary,
-    borderRadius:16,
-    paddingVertical:19,
-    paddingHorizontal:16,
-    marginTop:10,
-    marginHorizontal:5,
-  }
-
+  orderButton: {
+    backgroundColor: Colors.primary,
+    borderRadius: 16,
+    paddingVertical: 19,
+    paddingHorizontal: 16,
+    marginTop: 10,
+    marginHorizontal: 5,
+  },
 });
-
-const payStyles = StyleSheet.create({
-
-})
-
-// AIzaSyBvZxPchfdOd6VvLIsYYt01iLnA9eiuhFg  Google Maps Api

@@ -14,9 +14,15 @@ const productSlice = createSlice({
     addProduct: (state, action) => {
       state.items.push(action.payload);
     },
-    addProducts:(state, action) => {
-      state.item = state.items.push(...action.payload);
+    addProducts: (state, action) => {
+      if (Array.isArray(action.payload)) {
+        state.items = action.payload;
+      }
     },
+
+    // addProducts:(state, action) => {
+    //   state.item = state.items.push(...action.payload);
+    // },
   },
 });
 
